@@ -15,7 +15,7 @@
 **Using Composer**
 
 ```
-composer install fyre/uri
+composer require fyre/uri
 ```
 
 In PHP:
