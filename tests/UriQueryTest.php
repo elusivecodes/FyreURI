@@ -9,7 +9,7 @@ use
 trait UriQueryTest
 {
 
-    public function testUriAddQuery(): void
+    public function testAddQuery(): void
     {
         $uri = Uri::create('/?param1=a&param2=b&param3=c');
 
@@ -28,7 +28,7 @@ trait UriQueryTest
         );
     }
 
-    public function testUriExceptQuery(): void
+    public function testExceptQuery(): void
     {
         $uri = Uri::create('/?param1=a&param2=b&param3=c');
 
@@ -46,7 +46,7 @@ trait UriQueryTest
         );
     }
 
-    public function testUriOnlyQuery(): void
+    public function testOnlyQuery(): void
     {
         $uri = Uri::create('/?param1=a&param2=b&param3=c');
 

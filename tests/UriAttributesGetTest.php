@@ -9,7 +9,7 @@ use
 trait UriAttributesGetTest
 {
 
-    public function testUriGetAuthority(): void
+    public function testGetAuthority(): void
     {
         $this->assertEquals(
             'domain.com',
@@ -17,7 +17,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetAuthorityWithPort(): void
+    public function testGetAuthorityWithPort(): void
     {
         $this->assertEquals(
             'domain.com:3001',
@@ -25,7 +25,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetAuthorityWithUsername(): void
+    public function testGetAuthorityWithUsername(): void
     {
         $this->assertEquals(
             'user@domain.com',
@@ -33,7 +33,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetAuthorityWithPassword(): void
+    public function testGetAuthorityWithPassword(): void
     {
         $this->assertEquals(
             'user:password@domain.com',
@@ -41,7 +41,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetFragment(): void
+    public function testGetFragment(): void
     {
         $this->assertEquals(
             'test',
@@ -49,7 +49,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetHost(): void
+    public function testGetHost(): void
     {
         $this->assertEquals(
             'domain.com',
@@ -57,7 +57,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetPath(): void
+    public function testGetPath(): void
     {
         $this->assertEquals(
             '/path/deep',
@@ -65,7 +65,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetPathEncoded(): void
+    public function testGetPathEncoded(): void
     {
         $this->assertEquals(
             '/test%20path',
@@ -73,7 +73,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetPort(): void
+    public function testGetPort(): void
     {
         $this->assertEquals(
             3001,
@@ -81,7 +81,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetQuery(): void
+    public function testGetQuery(): void
     {
         $this->assertEquals(
             [
@@ -92,7 +92,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetQueryString(): void
+    public function testGetQueryString(): void
     {
         $this->assertEquals(
             'param1=a&param2=b',
@@ -100,7 +100,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetScheme(): void
+    public function testGetScheme(): void
     {
         $this->assertEquals(
             'https',
@@ -108,7 +108,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetSchemeDefault(): void
+    public function testGetSchemeDefault(): void
     {
         $this->assertEquals(
             'http',
@@ -116,7 +116,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetSegment(): void
+    public function testGetSegment(): void
     {
         $this->assertEquals(
             'deep',
@@ -124,7 +124,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetSegmentDecoded(): void
+    public function testGetSegmentDecoded(): void
     {
         $this->assertEquals(
             'test path',
@@ -132,7 +132,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetSegmentInvalid(): void
+    public function testGetSegmentInvalid(): void
     {
         $this->assertEquals(
             '',
@@ -140,7 +140,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetSegments(): void
+    public function testGetSegments(): void
     {
         $this->assertEquals(
             ['path', 'deep'],
@@ -148,7 +148,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetTotalSegments(): void
+    public function testGetTotalSegments(): void
     {
         $this->assertEquals(
             2,
@@ -156,7 +156,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetUserInfo(): void
+    public function testGetUserInfo(): void
     {
         $this->assertEquals(
             'user',
@@ -164,7 +164,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetUserInfoWithPassword(): void
+    public function testGetUserInfoWithPassword(): void
     {
         $this->assertEquals(
             'user:password',
@@ -172,7 +172,7 @@ trait UriAttributesGetTest
         );
     }
 
-    public function testUriGetUserInfoEncoded(): void
+    public function testGetUserInfoEncoded(): void
     {
         $this->assertEquals(
             'test%20user:test%20password',

@@ -10,7 +10,7 @@ use
 trait UriAttributesSetTest
 {
 
-    public function testUriSetAuthority(): void
+    public function testSetAuthority(): void
     {
         $uri = new Uri();
 
@@ -25,7 +25,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetAuthorityWithPort(): void
+    public function testSetAuthorityWithPort(): void
     {
         $uri = new Uri();
 
@@ -40,7 +40,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetAuthorityWithUserInfo(): void
+    public function testSetAuthorityWithUserInfo(): void
     {
         $uri = new Uri();
 
@@ -55,7 +55,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetFragment(): void
+    public function testSetFragment(): void
     {
         $uri = new Uri();
 
@@ -70,7 +70,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetFragmentWithHash(): void
+    public function testSetFragmentWithHash(): void
     {
         $uri = new Uri();
 
@@ -82,7 +82,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetHost(): void
+    public function testSetHost(): void
     {
         $uri = new Uri();
 
@@ -97,7 +97,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetPath(): void
+    public function testSetPath(): void
     {
         $uri = new Uri();
 
@@ -112,7 +112,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetPathWithLeadingSlash(): void
+    public function testSetPathWithLeadingSlash(): void
     {
         $uri = new Uri();
 
@@ -124,7 +124,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetPathWithDots(): void
+    public function testSetPathWithDots(): void
     {
         $uri = new Uri();
 
@@ -136,7 +136,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetPort(): void
+    public function testSetPort(): void
     {
         $uri = new Uri();
 
@@ -151,7 +151,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetPortInvalid(): void
+    public function testSetPortInvalid(): void
     {
         $this->expectException(UriException::class);
 
@@ -160,7 +160,7 @@ trait UriAttributesSetTest
         $uri->setPort(0);
     }
 
-    public function testUriSetQuery(): void
+    public function testSetQuery(): void
     {
         $uri = new Uri();
 
@@ -179,7 +179,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetQueryString(): void
+    public function testSetQueryString(): void
     {
         $uri = new Uri();
 
@@ -196,7 +196,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetQueryStringWithQuestionMark(): void
+    public function testSetQueryStringWithQuestionMark(): void
     {
         $uri = new Uri();
 
@@ -210,7 +210,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetScheme(): void
+    public function testSetScheme(): void
     {
         $uri = new Uri();
 
@@ -225,7 +225,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetUserInfo(): void
+    public function testSetUserInfo(): void
     {
         $uri = new Uri();
 
@@ -240,7 +240,7 @@ trait UriAttributesSetTest
         );
     }
 
-    public function testUriSetUserInfoWithPassword(): void
+    public function testSetUserInfoWithPassword(): void
     {
         $uri = new Uri();
 

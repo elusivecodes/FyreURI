@@ -9,7 +9,7 @@ use
 trait UriRelativeTest
 {
 
-    public function testUriRelativePath(): void
+    public function testRelativePath(): void
     {
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('deep');
@@ -25,7 +25,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeFullPath(): void
+    public function testRelativeFullPath(): void
     {
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('/new');
@@ -41,7 +41,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeFullPathWithDots(): void
+    public function testRelativeFullPathWithDots(): void
     {
         $uri1 = Uri::create('http://domain.com/path/deep');
         $uri2 = $uri1->resolveRelativeUri('../new');
@@ -57,7 +57,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUri(): void
+    public function testRelativeUri(): void
     {
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
@@ -73,7 +73,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithScheme(): void
+    public function testRelativeUriWithScheme(): void
     {
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('https://test.com');
@@ -89,7 +89,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithoutScheme(): void
+    public function testRelativeUriWithoutScheme(): void
     {
         $uri1 = Uri::create('https://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('//test.com');
@@ -105,7 +105,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithPort(): void
+    public function testRelativeUriWithPort(): void
     {
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com:3000');
@@ -121,7 +121,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithoutPort(): void
+    public function testRelativeUriWithoutPort(): void
     {
         $uri1 = Uri::create('http://domain.com:3000/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
@@ -137,7 +137,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithUsername(): void
+    public function testRelativeUriWithUsername(): void
     {
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://user@test.com');
@@ -153,7 +153,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithoutUsername(): void
+    public function testRelativeUriWithoutUsername(): void
     {
         $uri1 = Uri::create('http://user@domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
@@ -169,7 +169,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithPassword(): void
+    public function testRelativeUriWithPassword(): void
     {
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://user:password@test.com');
@@ -185,7 +185,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithoutPassword(): void
+    public function testRelativeUriWithoutPassword(): void
     {
         $uri1 = Uri::create('http://user:password@domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
@@ -201,7 +201,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithQuery(): void
+    public function testRelativeUriWithQuery(): void
     {
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com/?test=1');
@@ -217,7 +217,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithoutQuery(): void
+    public function testRelativeUriWithoutQuery(): void
     {
         $uri1 = Uri::create('http://domain.com:3000/path?test=1');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
@@ -233,7 +233,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithFragment(): void
+    public function testRelativeUriWithFragment(): void
     {
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com/#test');
@@ -249,7 +249,7 @@ trait UriRelativeTest
         );
     }
 
-    public function testUriRelativeUriWithoutFragment(): void
+    public function testRelativeUriWithoutFragment(): void
     {
         $uri1 = Uri::create('http://domain.com:3000/path#test');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
