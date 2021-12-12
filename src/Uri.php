@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Fyre\Uri;
 
 use
-    Fyre\Uri\Exceptions\UriException;
+    InvalidArgumentException;
 
 use const
     ARRAY_FILTER_USE_KEY;
@@ -302,7 +302,7 @@ class Uri
      * Set the URI string.
      * @param string $uri The URI string.
      * @return URI The URI.
-     * @throws UriException if the URI is invalid.
+     * @throws InvalidArgumentException if the URI is invalid.
      */
     public function parseUri(string $uri = ''): self
     {
@@ -313,7 +313,7 @@ class Uri
         $parts = parse_url($uri);
 
         if (!$parts) {
-            throw UriException::forInvalidUri($uri);
+            throw new InvalidArgumentException('Invalid URI: '.$uri);
         }
 
         $path = rawurldecode($parts['path'] ?? '');
@@ -436,12 +436,12 @@ class Uri
      * Set the URI port.
      * @param int|null $port The URI port.
      * @return URI The URI.
-     * @throws UriException if the port is invalid.
+     * @throws InvalidArgumentException if the port is invalid.
      */
     public function setPort(int|null $port = null): self
     {
         if ($port !== null && ($port <= 0 || $port > 65535)) {
-            throw UriException::forInvalidPort($port);
+            throw new InvalidArgumentException('Invalid Port: '.$port);
         }
 
         $this->port = $port;

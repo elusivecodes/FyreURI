@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Tests;
 
 use
-    Fyre\Uri\Exceptions\UriException,
     Fyre\Uri\Uri,
+    InvalidArgumentException,
     PHPUnit\Framework\TestCase;
 
 final class UriTest extends TestCase
@@ -91,7 +91,7 @@ final class UriTest extends TestCase
 
     public function testUriInvalid(): void
     {
-        $this->expectException(UriException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         Uri::create('https:///domain.com/');
     }

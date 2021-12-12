@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Tests;
 
 use
-    Fyre\Uri\Exceptions\UriException,
-    Fyre\Uri\Uri;
+    Fyre\Uri\Uri,
+    InvalidArgumentException;
 
 trait UriAttributesSetTest
 {
@@ -153,7 +153,7 @@ trait UriAttributesSetTest
 
     public function testSetPortInvalid(): void
     {
-        $this->expectException(UriException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $uri = new Uri();
 
