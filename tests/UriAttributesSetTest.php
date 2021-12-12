@@ -29,10 +29,7 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
-            $uri,
-            $uri->setAuthority('test.com:3000')
-        );
+        $uri->setAuthority('test.com:3000');
 
         $this->assertEquals(
             'test.com:3000',
@@ -44,10 +41,7 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
-            $uri,
-            $uri->setAuthority('user:password@test.com')
-        );
+        $uri->setAuthority('user:password@test.com');
 
         $this->assertEquals(
             'user:password@test.com',
@@ -244,10 +238,7 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
-            $uri,
-            $uri->setUserInfo('test', 'pass')
-        );
+        $uri->setUserInfo('test', 'pass');
 
         $this->assertEquals(
             'test:pass',
