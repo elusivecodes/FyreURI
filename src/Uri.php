@@ -25,6 +25,7 @@ use function
     rawurldecode,
     rawurlencode,
     rtrim,
+    str_starts_with,
     strpos,
     strtolower,
     substr,
@@ -334,7 +335,7 @@ class Uri
             }
 
             $this->setPath($path);
-        } else if (substr($path, 0, 1) === '/') {
+        } else if (str_starts_with($path, '/')) {
             $this->setPath($path);
         } else if ($path) {
             $newPath = rtrim($this->path, '/').'/'.$path;
@@ -532,7 +533,7 @@ class Uri
         $newPath = implode('/', $newSegments);
         $newPath = trim($newPath, '/ ');
 
-        if (substr($path, 0, 1) === '/') {
+        if (str_starts_with($path, '/')) {
             $newPath = '/'.$newPath;
         }
 
