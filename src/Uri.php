@@ -90,7 +90,7 @@ class Uri
      * @param mixed $value The value.
      * @return URI The URI.
      */
-    public function addQuery(string $key, $value = null): self
+    public function addQuery(string $key, $value = null): static
     {
         $this->query[$key] = $value;
 
@@ -102,7 +102,7 @@ class Uri
      * @param array $keys The query parameters to remove.
      * @return URI The URI.
      */
-    public function exceptQuery(array $keys): self
+    public function exceptQuery(array $keys): static
     {
         $this->query = array_filter(
             $this->query,
@@ -288,7 +288,7 @@ class Uri
      * @param array $keys The query parameters to keep.
      * @return URI The URI.
      */
-    public function onlyQuery(array $keys): self
+    public function onlyQuery(array $keys): static
     {
         $this->query = array_filter(
             $this->query,
@@ -305,7 +305,7 @@ class Uri
      * @return URI The URI.
      * @throws InvalidArgumentException if the URI is invalid.
      */
-    public function parseUri(string $uri = ''): self
+    public function parseUri(string $uri = ''): static
     {
         if (!$uri) {
             return $this;
@@ -399,7 +399,7 @@ class Uri
      * @param string $fragment The URI fragment.
      * @return URI The URI.
      */
-    public function setFragment(string $fragment = ''): self
+    public function setFragment(string $fragment = ''): static
     {
         $this->fragment = trim($fragment, '# ');
 
@@ -411,7 +411,7 @@ class Uri
      * @param string $host The URI host.
      * @return URI The URI.
      */
-    public function setHost(string $host = ''): self
+    public function setHost(string $host = ''): static
     {
         $this->host = trim($host);
 
@@ -439,7 +439,7 @@ class Uri
      * @return URI The URI.
      * @throws InvalidArgumentException if the port is invalid.
      */
-    public function setPort(int|null $port = null): self
+    public function setPort(int|null $port = null): static
     {
         if ($port !== null && ($port <= 0 || $port > 65535)) {
             throw new InvalidArgumentException('Invalid Port: '.$port);
@@ -455,7 +455,7 @@ class Uri
      * @param array $query The query array.
      * @return URI The URI.
      */
-    public function setQuery(array $query): self
+    public function setQuery(array $query): static
     {
         $query = http_build_query($query);
 
@@ -467,7 +467,7 @@ class Uri
      * @param string $query The URI query string.
      * @return URI The URI.
      */
-    public function setQueryString(string $query): self
+    public function setQueryString(string $query): static
     {
         $query = trim($query, '? ');
 
@@ -481,7 +481,7 @@ class Uri
      * @param string $scheme The URI scheme.
      * @return URI The URI.
      */
-    public function setScheme(string $scheme): self
+    public function setScheme(string $scheme): static
     {
         $scheme = strtolower($scheme);
         $this->scheme = trim($scheme, ':/ ');
@@ -495,7 +495,7 @@ class Uri
      * @param string $password The password.
      * @return URI The URI.
      */
-    public function setUserInfo(string $user, string $password = ''): self
+    public function setUserInfo(string $user, string $password = ''): static
     {
         $this->user = trim($user);
         $this->password = trim($password);
