@@ -11,7 +11,7 @@ trait UriAttributesGetTest
 
     public function testGetAuthority(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'domain.com',
             Uri::create('http://domain.com/')->getAuthority()
         );
@@ -19,7 +19,7 @@ trait UriAttributesGetTest
 
     public function testGetAuthorityWithPort(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'domain.com:3001',
             Uri::create('http://domain.com:3001/')->getAuthority()
         );
@@ -27,7 +27,7 @@ trait UriAttributesGetTest
 
     public function testGetAuthorityWithUsername(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'user@domain.com',
             Uri::create('http://user@domain.com/')->getAuthority()
         );
@@ -35,7 +35,7 @@ trait UriAttributesGetTest
 
     public function testGetAuthorityWithPassword(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'user:password@domain.com',
             Uri::create('http://user:password@domain.com/')->getAuthority()
         );
@@ -43,7 +43,7 @@ trait UriAttributesGetTest
 
     public function testGetFragment(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'test',
             Uri::create('http://domain.com/#test')->getFragment()
         );
@@ -51,7 +51,7 @@ trait UriAttributesGetTest
 
     public function testGetHost(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'domain.com',
             Uri::create('http://domain.com/')->getHost()
         );
@@ -59,7 +59,7 @@ trait UriAttributesGetTest
 
     public function testGetPath(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             '/path/deep',
             Uri::create('http://domain.com/path/deep')->getPath()
         );
@@ -67,7 +67,7 @@ trait UriAttributesGetTest
 
     public function testGetPathEncoded(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             '/test%20path',
             Uri::create('http://domain.com/test%20path')->getPath()
         );
@@ -75,7 +75,7 @@ trait UriAttributesGetTest
 
     public function testGetPort(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             3001,
             Uri::create('http://domain.com:3001/')->getPort()
         );
@@ -83,7 +83,7 @@ trait UriAttributesGetTest
 
     public function testGetQuery(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'param1' => 'a',
                 'param2' => 'b'
@@ -94,7 +94,7 @@ trait UriAttributesGetTest
 
     public function testGetQueryString(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'param1=a&param2=b',
             Uri::create('http://domain.com/?param1=a&param2=b')->getQueryString()
         );
@@ -102,7 +102,7 @@ trait UriAttributesGetTest
 
     public function testGetScheme(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'https',
             Uri::create('https://domain.com/')->getScheme()
         );
@@ -110,7 +110,7 @@ trait UriAttributesGetTest
 
     public function testGetSchemeDefault(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'http',
             Uri::create()->getScheme()
         );
@@ -118,7 +118,7 @@ trait UriAttributesGetTest
 
     public function testGetSegment(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'deep',
             Uri::create('https://domain.com/path/deep')->getSegment(2)
         );
@@ -126,7 +126,7 @@ trait UriAttributesGetTest
 
     public function testGetSegmentDecoded(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'test path',
             Uri::create('http://domain.com/test%20path')->getSegment(1)
         );
@@ -134,7 +134,7 @@ trait UriAttributesGetTest
 
     public function testGetSegmentInvalid(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             '',
             Uri::create('https://domain.com/path/deep')->getSegment(3)
         );
@@ -142,7 +142,7 @@ trait UriAttributesGetTest
 
     public function testGetSegments(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             ['path', 'deep'],
             Uri::create('https://domain.com/path/deep')->getSegments()
         );
@@ -150,7 +150,7 @@ trait UriAttributesGetTest
 
     public function testGetTotalSegments(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             2,
             Uri::create('https://domain.com/path/deep')->getTotalSegments()
         );
@@ -158,7 +158,7 @@ trait UriAttributesGetTest
 
     public function testGetUserInfo(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'user',
             Uri::create('http://user@domain.com/')->getUserInfo()
         );
@@ -166,7 +166,7 @@ trait UriAttributesGetTest
 
     public function testGetUserInfoWithPassword(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'user:password',
             Uri::create('http://user:password@domain.com/')->getUserInfo()
         );
@@ -174,7 +174,7 @@ trait UriAttributesGetTest
 
     public function testGetUserInfoEncoded(): void
     {
-        $this->assertEquals(
+        $this->assertSame(
             'test%20user:test%20password',
             Uri::create('http://test%20user:test%20password@domain.com/')->getUserInfo()
         );

@@ -14,12 +14,12 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->setAuthority('test.com')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'test.com',
             $uri->getAuthority()
         );
@@ -31,7 +31,7 @@ trait UriAttributesSetTest
 
         $uri->setAuthority('test.com:3000');
 
-        $this->assertEquals(
+        $this->assertSame(
             'test.com:3000',
             $uri->getAuthority()
         );
@@ -43,7 +43,7 @@ trait UriAttributesSetTest
 
         $uri->setAuthority('user:password@test.com');
 
-        $this->assertEquals(
+        $this->assertSame(
             'user:password@test.com',
             $uri->getAuthority()
         );
@@ -53,12 +53,12 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->setFragment('test')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'test',
             $uri->getFragment()
         );
@@ -70,7 +70,7 @@ trait UriAttributesSetTest
 
         $uri->setFragment('#test');
 
-        $this->assertEquals(
+        $this->assertSame(
             'test',
             $uri->getFragment()
         );
@@ -80,12 +80,12 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->setHost('test.com')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'test.com',
             $uri->getHost()
         );
@@ -95,12 +95,12 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->setPath('test/deep')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'test/deep',
             $uri->getPath()
         );
@@ -112,7 +112,7 @@ trait UriAttributesSetTest
 
         $uri->setPath('/test/deep');
 
-        $this->assertEquals(
+        $this->assertSame(
             '/test/deep',
             $uri->getPath()
         );
@@ -124,7 +124,7 @@ trait UriAttributesSetTest
 
         $uri->setPath('test/../deep');
 
-        $this->assertEquals(
+        $this->assertSame(
             'deep',
             $uri->getPath()
         );
@@ -134,12 +134,12 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->setPort(3000)
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             3000,
             $uri->getPort()
         );
@@ -158,14 +158,14 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->setQuery([
                 'test' => 'a'
             ])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'test' => 'a'
             ],
@@ -177,12 +177,12 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->setQueryString('test=a')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'test' => 'a'
             ],
@@ -196,7 +196,7 @@ trait UriAttributesSetTest
 
         $uri->setQueryString('?test=a');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'test' => 'a'
             ],
@@ -208,12 +208,12 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->setScheme('https')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'https',
             $uri->getScheme()
         );
@@ -223,12 +223,12 @@ trait UriAttributesSetTest
     {
         $uri = new Uri();
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->setUserInfo('test')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'test',
             $uri->getUserInfo()
         );
@@ -240,7 +240,7 @@ trait UriAttributesSetTest
 
         $uri->setUserInfo('test', 'pass');
 
-        $this->assertEquals(
+        $this->assertSame(
             'test:pass',
             $uri->getUserInfo()
         );

@@ -13,12 +13,12 @@ trait UriQueryTest
     {
         $uri = Uri::create('/?param1=a&param2=b&param3=c');
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->addQuery('param3', 'c')
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'param1' => 'a',
                 'param2' => 'b',
@@ -32,12 +32,12 @@ trait UriQueryTest
     {
         $uri = Uri::create('/?param1=a&param2=b&param3=c');
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->exceptQuery(['param1'])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'param2' => 'b',
                 'param3' => 'c'
@@ -50,12 +50,12 @@ trait UriQueryTest
     {
         $uri = Uri::create('/?param1=a&param2=b&param3=c');
 
-        $this->assertEquals(
+        $this->assertSame(
             $uri,
             $uri->onlyQuery(['param1'])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'param1' => 'a'
             ],

@@ -14,12 +14,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('deep');
 
-        $this->assertEquals(
-            'http://domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://domain.com/path/deep',
             $uri2->getUri()
         );
@@ -30,12 +30,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('/new');
 
-        $this->assertEquals(
-            'http://domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://domain.com/new',
             $uri2->getUri()
         );
@@ -46,12 +46,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com/path/deep');
         $uri2 = $uri1->resolveRelativeUri('../new');
 
-        $this->assertEquals(
-            'http://domain.com/path/deep',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://domain.com/path/new',
             $uri2->getUri()
         );
@@ -62,12 +62,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
 
-        $this->assertEquals(
-            'http://domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://test.com/',
             $uri2->getUri()
         );
@@ -78,12 +78,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('https://test.com');
 
-        $this->assertEquals(
-            'http://domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'https://test.com/',
             $uri2->getUri()
         );
@@ -94,12 +94,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('https://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('//test.com');
 
-        $this->assertEquals(
-            'https://domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'test.com/',
             $uri2->getUri()
         );
@@ -110,12 +110,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com:3000');
 
-        $this->assertEquals(
-            'http://domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://test.com:3000/',
             $uri2->getUri()
         );
@@ -126,12 +126,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com:3000/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
 
-        $this->assertEquals(
-            'http://domain.com:3000/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://test.com/',
             $uri2->getUri()
         );
@@ -142,12 +142,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://user@test.com');
 
-        $this->assertEquals(
-            'http://domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://user@test.com/',
             $uri2->getUri()
         );
@@ -158,12 +158,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://user@domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
 
-        $this->assertEquals(
-            'http://user@domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://test.com/',
             $uri2->getUri()
         );
@@ -174,12 +174,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://user:password@test.com');
 
-        $this->assertEquals(
-            'http://domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://user:password@test.com/',
             $uri2->getUri()
         );
@@ -190,12 +190,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://user:password@domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
 
-        $this->assertEquals(
-            'http://user:password@domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://test.com/',
             $uri2->getUri()
         );
@@ -206,12 +206,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com/?test=1');
 
-        $this->assertEquals(
-            'http://domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://test.com/?test=1',
             $uri2->getUri()
         );
@@ -222,12 +222,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com:3000/path?test=1');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
 
-        $this->assertEquals(
-            'http://domain.com:3000/path?test=1',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://test.com/',
             $uri2->getUri()
         );
@@ -238,12 +238,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com/path');
         $uri2 = $uri1->resolveRelativeUri('http://test.com/#test');
 
-        $this->assertEquals(
-            'http://domain.com/path',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://test.com/#test',
             $uri2->getUri()
         );
@@ -254,12 +254,12 @@ trait UriRelativeTest
         $uri1 = Uri::create('http://domain.com:3000/path#test');
         $uri2 = $uri1->resolveRelativeUri('http://test.com');
 
-        $this->assertEquals(
-            'http://domain.com:3000/path#test',
-            $uri1->getUri()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'http://test.com/',
             $uri2->getUri()
         );
