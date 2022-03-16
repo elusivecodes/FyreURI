@@ -106,7 +106,7 @@ class Uri
     {
         $this->query = array_filter(
             $this->query,
-            fn($key) => !in_array($key, $keys),
+            fn(mixed $key): bool => !in_array($key, $keys),
             ARRAY_FILTER_USE_KEY
         );
 
@@ -163,7 +163,7 @@ class Uri
     public function getPath(): string
     {
         $segments = explode('/', $this->path);
-        $segments = array_map(fn($segment) => rawurlencode($segment), $segments);
+        $segments = array_map(fn(string $segment): string => rawurlencode($segment), $segments);
 
         return implode('/', $segments);
     }
@@ -292,7 +292,7 @@ class Uri
     {
         $this->query = array_filter(
             $this->query,
-            fn($key) => in_array($key, $keys),
+            fn(mixed $key): bool => in_array($key, $keys),
             ARRAY_FILTER_USE_KEY
         );
 
