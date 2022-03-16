@@ -90,7 +90,7 @@ class Uri
      * @param mixed $value The value.
      * @return URI The URI.
      */
-    public function addQuery(string $key, $value = null): static
+    public function addQuery(string $key, mixed $value = null): static
     {
         $this->query[$key] = $value;
 
