@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use
-    Fyre\Uri\Uri,
+    Fyre\URI\Uri,
     InvalidArgumentException,
     PHPUnit\Framework\TestCase;
 

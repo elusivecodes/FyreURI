@@ -21,7 +21,7 @@ composer require fyre/uri
 In PHP:
 
 ```php
-use Fyre\Uri\Uri;
+use Fyre\URI\Uri;
 ```
 
 ## Uri Creation

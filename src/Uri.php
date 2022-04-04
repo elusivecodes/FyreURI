@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Fyre\Uri;
+namespace Fyre\URI;
 
 use
     InvalidArgumentException;
