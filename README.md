@@ -1,6 +1,6 @@
-# FyreUri
+# FyreURI
 
-**FyreUri** is a free, URI library for *PHP*.
+**FyreURI** is a free, URI library for *PHP*.
 
 
 ## Table Of Contents
