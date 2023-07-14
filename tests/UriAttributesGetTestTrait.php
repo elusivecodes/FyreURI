@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use
-    Fyre\URI\Uri;
+use Fyre\Http\Uri;
 
-trait UriAttributesGetTest
+trait UriAttributesGetTestTrait
 {
 
     public function testGetAuthority(): void
     {
         $this->assertSame(
             'domain.com',
-            Uri::create('http://domain.com/')->getAuthority()
+            Uri::fromString('http://domain.com/')->getAuthority()
         );
     }
 
@@ -21,7 +20,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'domain.com:3001',
-            Uri::create('http://domain.com:3001/')->getAuthority()
+            Uri::fromString('http://domain.com:3001/')->getAuthority()
         );
     }
 
@@ -29,7 +28,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'user@domain.com',
-            Uri::create('http://user@domain.com/')->getAuthority()
+            Uri::fromString('http://user@domain.com/')->getAuthority()
         );
     }
 
@@ -37,7 +36,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'user:password@domain.com',
-            Uri::create('http://user:password@domain.com/')->getAuthority()
+            Uri::fromString('http://user:password@domain.com/')->getAuthority()
         );
     }
 
@@ -45,7 +44,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'test',
-            Uri::create('http://domain.com/#test')->getFragment()
+            Uri::fromString('http://domain.com/#test')->getFragment()
         );
     }
 
@@ -53,7 +52,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'domain.com',
-            Uri::create('http://domain.com/')->getHost()
+            Uri::fromString('http://domain.com/')->getHost()
         );
     }
 
@@ -61,7 +60,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             '/path/deep',
-            Uri::create('http://domain.com/path/deep')->getPath()
+            Uri::fromString('http://domain.com/path/deep')->getPath()
         );
     }
 
@@ -69,7 +68,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             '/test%20path',
-            Uri::create('http://domain.com/test%20path')->getPath()
+            Uri::fromString('http://domain.com/test%20path')->getPath()
         );
     }
 
@@ -77,7 +76,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             3001,
-            Uri::create('http://domain.com:3001/')->getPort()
+            Uri::fromString('http://domain.com:3001/')->getPort()
         );
     }
 
@@ -88,7 +87,7 @@ trait UriAttributesGetTest
                 'param1' => 'a',
                 'param2' => 'b'
             ],
-            Uri::create('http://domain.com/?param1=a&param2=b')->getQuery()
+            Uri::fromString('http://domain.com/?param1=a&param2=b')->getQuery()
         );
     }
 
@@ -96,7 +95,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'param1=a&param2=b',
-            Uri::create('http://domain.com/?param1=a&param2=b')->getQueryString()
+            Uri::fromString('http://domain.com/?param1=a&param2=b')->getQueryString()
         );
     }
 
@@ -104,15 +103,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'https',
-            Uri::create('https://domain.com/')->getScheme()
-        );
-    }
-
-    public function testGetSchemeDefault(): void
-    {
-        $this->assertSame(
-            'http',
-            Uri::create()->getScheme()
+            Uri::fromString('https://domain.com/')->getScheme()
         );
     }
 
@@ -120,7 +111,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'deep',
-            Uri::create('https://domain.com/path/deep')->getSegment(2)
+            Uri::fromString('https://domain.com/path/deep')->getSegment(2)
         );
     }
 
@@ -128,7 +119,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'test path',
-            Uri::create('http://domain.com/test%20path')->getSegment(1)
+            Uri::fromString('http://domain.com/test%20path')->getSegment(1)
         );
     }
 
@@ -136,7 +127,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             '',
-            Uri::create('https://domain.com/path/deep')->getSegment(3)
+            Uri::fromString('https://domain.com/path/deep')->getSegment(3)
         );
     }
 
@@ -144,7 +135,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             ['path', 'deep'],
-            Uri::create('https://domain.com/path/deep')->getSegments()
+            Uri::fromString('https://domain.com/path/deep')->getSegments()
         );
     }
 
@@ -152,7 +143,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             2,
-            Uri::create('https://domain.com/path/deep')->getTotalSegments()
+            Uri::fromString('https://domain.com/path/deep')->getTotalSegments()
         );
     }
 
@@ -160,7 +151,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'user',
-            Uri::create('http://user@domain.com/')->getUserInfo()
+            Uri::fromString('http://user@domain.com/')->getUserInfo()
         );
     }
 
@@ -168,7 +159,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'user:password',
-            Uri::create('http://user:password@domain.com/')->getUserInfo()
+            Uri::fromString('http://user:password@domain.com/')->getUserInfo()
         );
     }
 
@@ -176,7 +167,7 @@ trait UriAttributesGetTest
     {
         $this->assertSame(
             'test%20user:test%20password',
-            Uri::create('http://test%20user:test%20password@domain.com/')->getUserInfo()
+            Uri::fromString('http://test%20user:test%20password@domain.com/')->getUserInfo()
         );
     }
 

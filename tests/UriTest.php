@@ -3,25 +3,23 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use
-    Fyre\URI\Uri,
-    InvalidArgumentException,
-    PHPUnit\Framework\TestCase;
+use Fyre\Http\Uri;
+use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
 final class UriTest extends TestCase
 {
 
-    use
-        UriAttributesGetTest,
-        UriAttributesSetTest,
-        UriQueryTest,
-        UriRelativeTest;
+    use UriAttributesGetTestTrait;
+    use UriAttributesSetTestTrait;
+    use UriQueryTestTrait;
+    use UriRelativeTestTrait;
 
     public function testUri(): void
     {
         $this->assertEquals(
             'https://domain.com/',
-            Uri::create('https://domain.com/')->getUri()
+            Uri::fromString('https://domain.com/')->getUri()
         );
     }
 
@@ -29,7 +27,7 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             'https://domain.com:3000/',
-            Uri::create('https://domain.com:3000/')->getUri()
+            Uri::fromString('https://domain.com:3000/')->getUri()
         );
     }
 
@@ -37,7 +35,7 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             'https://user@domain.com/',
-            Uri::create('https://user@domain.com/')->getUri()
+            Uri::fromString('https://user@domain.com/')->getUri()
         );
     }
 
@@ -45,7 +43,7 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             'https://user:password@domain.com/',
-            Uri::create('https://user:password@domain.com/')->getUri()
+            Uri::fromString('https://user:password@domain.com/')->getUri()
         );
     }
 
@@ -53,7 +51,7 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             'https://domain.com/path/deep',
-            Uri::create('https://domain.com/path/deep')->getUri()
+            Uri::fromString('https://domain.com/path/deep')->getUri()
         );
     }
 
@@ -61,7 +59,7 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             'https://domain.com/?test=1',
-            Uri::create('https://domain.com/?test=1')->getUri()
+            Uri::fromString('https://domain.com/?test=1')->getUri()
         );
     }
 
@@ -69,7 +67,7 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             'https://domain.com/#test',
-            Uri::create('https://domain.com/#test')->getUri()
+            Uri::fromString('https://domain.com/#test')->getUri()
         );
     }
 
@@ -77,7 +75,7 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             '/path/deep',
-            Uri::create('/path/deep')->getUri()
+            Uri::fromString('/path/deep')->getUri()
         );
     }
 
@@ -85,7 +83,7 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             '/path/deep/',
-            Uri::create('/path/deep/')->getUri()
+            Uri::fromString('/path/deep/')->getUri()
         );
     }
 
@@ -93,7 +91,7 @@ final class UriTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        Uri::create('https:///domain.com/');
+        Uri::fromString('https:///domain.com/');
     }
 
 }

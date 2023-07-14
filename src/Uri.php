@@ -1,35 +1,32 @@
 <?php
 declare(strict_types=1);
 
-namespace Fyre\URI;
+namespace Fyre\Http;
 
-use
-    InvalidArgumentException;
+use InvalidArgumentException;
 
-use const
-    ARRAY_FILTER_USE_KEY;
+use const ARRAY_FILTER_USE_KEY;
 
-use function
-    array_filter,
-    array_key_exists,
-    array_map,
-    array_pop,
-    count,
-    explode,
-    http_build_query,
-    implode,
-    in_array,
-    ltrim,
-    parse_str,
-    parse_url,
-    rawurldecode,
-    rawurlencode,
-    rtrim,
-    str_starts_with,
-    strpos,
-    strtolower,
-    substr,
-    trim;
+use function array_filter;
+use function array_key_exists;
+use function array_map;
+use function array_pop;
+use function count;
+use function explode;
+use function http_build_query;
+use function implode;
+use function in_array;
+use function ltrim;
+use function parse_str;
+use function parse_url;
+use function rawurldecode;
+use function rawurlencode;
+use function rtrim;
+use function str_starts_with;
+use function strpos;
+use function strtolower;
+use function substr;
+use function trim;
 
 /**
  * Uri
@@ -44,7 +41,9 @@ class Uri
         'https' => 443
     ];
 
-    protected string $scheme = 'http';
+    protected const WHITESPACE = " \n\r\t\v\x00";
+
+    protected string $scheme = '';
     protected string $user = '';
     protected string $password = '';
     protected string $host = '';
@@ -54,6 +53,9 @@ class Uri
     protected array $query = [];
     protected string $fragment = '';
 
+    protected string|null $uriString = null;
+    protected string|null $queryString = null;
+
     protected bool $showPassword = true;
 
     /**
@@ -61,7 +63,7 @@ class Uri
      * @param string $uri The URI string.
      * 
      */
-    public static function create(string $uri = ''): static
+    public static function fromString(string $uri = ''): static
     {
         return new static($uri);
     }
@@ -73,6 +75,15 @@ class Uri
     public function __construct(string $uri = '')
     {
         $this->parseUri($uri);
+    }
+
+    /**
+     * Clone callback.
+     */
+    public function __clone()
+    {
+        $this->queryString = null;
+        $this->uriString = null;
     }
 
     /**
@@ -88,29 +99,31 @@ class Uri
      * Add a query parameter.
      * @param string $key The key.
      * @param mixed $value The value.
-     * @return URI The URI.
+     * @return URI The new URI.
      */
     public function addQuery(string $key, mixed $value = null): static
     {
-        $this->query[$key] = $value;
+        $query = $this->query;
 
-        return $this;
+        $query[$key] = $value;
+
+        return $this->setQuery($query);
     }
 
     /**
      * Remove query parameters.
      * @param array $keys The query parameters to remove.
-     * @return URI The URI.
+     * @return URI The new URI.
      */
     public function exceptQuery(array $keys): static
     {
-        $this->query = array_filter(
+        $query = array_filter(
             $this->query,
             fn(mixed $key): bool => !in_array($key, $keys),
             ARRAY_FILTER_USE_KEY
         );
 
-        return $this;
+        return $this->setQuery($query);
     }
 
     /**
@@ -144,7 +157,7 @@ class Uri
      */
     public function getFragment(): string
     {
-        return $this->fragment;
+        return rawurlencode($this->fragment);
     }
 
     /**
@@ -192,7 +205,7 @@ class Uri
      */
     public function getQueryString(): string
     {
-        return http_build_query($this->query);
+        return $this->queryString ??= http_build_query($this->query);
     }
 
     /**
@@ -238,6 +251,10 @@ class Uri
      */
     public function getUri(): string
     {
+        if ($this->uriString !== null) {
+            return $this->uriString;
+        }
+
         $authority = $this->getAuthority();
         $path = $this->getPath();
 
@@ -262,10 +279,10 @@ class Uri
         }
 
         if ($this->fragment) {
-            $uri .= '#'.$this->fragment;
+            $uri .= '#'.$this->getFragment();
         }
 
-        return $uri;
+        return $this->uriString = $uri;
     }
 
     /**
@@ -286,66 +303,17 @@ class Uri
     /**
      * Filter query parameters.
      * @param array $keys The query parameters to keep.
-     * @return URI The URI.
+     * @return URI The new URI.
      */
     public function onlyQuery(array $keys): static
     {
-        $this->query = array_filter(
+        $query = array_filter(
             $this->query,
             fn(mixed $key): bool => in_array($key, $keys),
             ARRAY_FILTER_USE_KEY
         );
 
-        return $this;
-    }
-
-    /**
-     * Set the URI string.
-     * @param string $uri The URI string.
-     * @return URI The URI.
-     * @throws InvalidArgumentException if the URI is invalid.
-     */
-    public function parseUri(string $uri = ''): static
-    {
-        if (!$uri) {
-            return $this;
-        }
-
-        $parts = parse_url($uri);
-
-        if (!$parts) {
-            throw new InvalidArgumentException('Invalid URI: '.$uri);
-        }
-
-        $path = rawurldecode($parts['path'] ?? '');
-
-        if (array_key_exists('host', $parts)) {
-            $this->setScheme($parts['scheme'] ?? '');
-
-            $user = rawurldecode($parts['user'] ?? '');
-            $password = rawurldecode($parts['pass'] ?? '');
-            $this->setUserInfo($user, $password);
-
-            $this->setHost($parts['host']);
-
-            if (array_key_exists('port', $parts)) {
-                $this->setPort((int) $parts['port']);
-            } else {
-                $this->setPort(null);
-            }
-
-            $this->setPath($path);
-        } else if (str_starts_with($path, '/')) {
-            $this->setPath($path);
-        } else if ($path) {
-            $newPath = rtrim($this->path, '/').'/'.$path;
-            $this->setPath($newPath);
-        }
-
-        $this->setQueryString($parts['query'] ?? '');
-        $this->setFragment($parts['fragment'] ?? '');
-
-        return $this;
+        return $this->setQuery($query);
     }
 
     /**
@@ -373,87 +341,86 @@ class Uri
 
         $parts = parse_url($authority);
 
-        if ($parts && array_key_exists('host', $parts)) {
-            if (array_key_exists('scheme', $parts)) {
-                $this->setScheme($parts['scheme']);
-            }
-
-            $user = rawurldecode($parts['user'] ?? '');
-            $password = rawurldecode($parts['pass'] ?? '');
-            $this->setUserInfo($user, $password);
-
-            $this->setHost($parts['host']);
-
-            if (array_key_exists('port', $parts)) {
-                $this->setPort((int) $parts['port']);
-            } else {
-                $this->setPort(null);
-            }
+        if (!$parts || !array_key_exists('host', $parts)) {
+            throw new InvalidArgumentException('Invalid authority: '.$authority);
         }
 
-        return $this;
+        $temp = clone $this;
+
+        $user = rawurldecode($parts['user'] ?? '');
+        $password = rawurldecode($parts['pass'] ?? '');
+
+        $temp->scheme = static::filterScheme($parts['scheme'] ?? '');
+        $temp->user = static::trim($user);
+        $temp->password = static::trim($password);
+        $temp->host = static::trim($parts['host']);
+        $temp->port = static::filterPort($parts['port'] ?? null);
+
+        return $temp;
     }
 
     /**
      * Set the URI fragment.
      * @param string $fragment The URI fragment.
-     * @return URI The URI.
+     * @return URI The new URI.
      */
     public function setFragment(string $fragment = ''): static
     {
-        $this->fragment = trim($fragment, '# ');
+        $temp = clone $this;
 
-        return $this;
+        $temp->fragment = static::filterFragment($fragment);
+
+        return $temp;
     }
 
     /**
      * Set the URI host.
      * @param string $host The URI host.
-     * @return URI The URI.
+     * @return URI The new URI.
      */
     public function setHost(string $host = ''): static
     {
-        $this->host = trim($host);
+        $temp = clone $this;
 
-        return $this;
+        $temp->host = static::trim($host);
+
+        return $temp;
     }
 
     /**
      * Set the URI path.
      * @param string $path The URI path.
-     * @return URI The URI.
+     * @return URI The new URI.
      */
     public function setPath(string $path)
     {
-        $this->path = static::removeDotSegments($path);
+        $temp = clone $this;
 
-        $path = trim($this->path, '/');
-        $this->segments = explode('/', $path);
+        $temp->path = static::filterPath($path);
+        $temp->segments = static::filterSegments($path);
 
-        return $this;
+        return $temp;
     }
 
     /**
      * Set the URI port.
      * @param int|null $port The URI port.
-     * @return URI The URI.
+     * @return URI The new URI.
      * @throws InvalidArgumentException if the port is invalid.
      */
     public function setPort(int|null $port = null): static
     {
-        if ($port !== null && ($port <= 0 || $port > 65535)) {
-            throw new InvalidArgumentException('Invalid Port: '.$port);
-        }
+        $temp = clone $this;
 
-        $this->port = $port;
+        $temp->port = static::filterPort($port);
 
-        return $this;
+        return $temp;
     }
 
     /**
      * Set the query array.
      * @param array $query The query array.
-     * @return URI The URI.
+     * @return URI The new URI.
      */
     public function setQuery(array $query): static
     {
@@ -465,50 +432,137 @@ class Uri
     /**
      * Set the URI query string.
      * @param string $query The URI query string.
-     * @return URI The URI.
+     * @return URI The new URI.
      */
     public function setQueryString(string $query): static
     {
-        $query = trim($query, '? ');
+        $temp = clone $this;
 
-        parse_str($query, $this->query);
+        $query = static::trim($query, '?');
 
-        return $this;
+        parse_str($query, $temp->query);
+
+        return $temp;
     }
 
     /**
      * Set the URI scheme.
      * @param string $scheme The URI scheme.
-     * @return URI The URI.
+     * @return URI The new URI.
      */
     public function setScheme(string $scheme): static
     {
-        $scheme = strtolower($scheme);
-        $this->scheme = trim($scheme, ':/ ');
+        $temp = clone $this;
 
-        return $this;
+        $temp->scheme = static::filterScheme($scheme);
+
+        return $temp;
     }
 
     /**
      * Set the user info.
      * @param string $user The user.
      * @param string $password The password.
-     * @return URI The URI.
+     * @return URI The new URI.
      */
     public function setUserInfo(string $user, string $password = ''): static
     {
-        $this->user = trim($user);
-        $this->password = trim($password);
+        $temp = clone $this;
+
+        $temp->user = static::trim($user);
+        $temp->password = static::trim($password);
+
+        return $temp;
+    }
+
+    /**
+     * Set the URI string.
+     * @param string $uri The URI string.
+     * @return URI The URI.
+     * @throws InvalidArgumentException if the URI is invalid.
+     */
+    protected function parseUri(string $uri = ''): static
+    {
+        $parts = parse_url($uri);
+
+        if (!$parts) {
+            throw new InvalidArgumentException('Invalid URI: '.$uri);
+        }
+
+        if (array_key_exists('host', $parts)) {
+            $this->scheme = '';
+            $this->port = null;
+            $this->user = '';
+            $this->password = '';
+            $this->path = '';
+            $this->segments = [];
+        }
+
+        if (array_key_exists('host', $parts) || array_key_exists('path', $parts)) {
+            $this->query = [];
+            $this->fragment = '';
+        }
+
+        if (array_key_exists('scheme', $parts)) {
+            $this->scheme = static::filterScheme($parts['scheme']);
+        }
+
+        if (array_key_exists('user', $parts)) {
+            $user = rawurldecode($parts['user']);
+            $password = rawurldecode($parts['pass'] ?? '');
+
+            $this->user = static::trim($user);
+            $this->password = static::trim($password);
+        }
+
+        if (array_key_exists('host', $parts)) {
+            $this->host = static::trim($parts['host']);
+        }
+
+        if (array_key_exists('port', $parts)) {
+            $this->port = static::filterPort($parts['port']);
+        }
+
+        if (array_key_exists('path', $parts) && $parts['path']) {
+            $path = rawurldecode($parts['path']);
+
+            if (!str_starts_with($path, '/')) {
+                $path = rtrim($this->path, '/').'/'.$path;
+            }
+
+            $this->path = static::filterPath($path);
+            $this->segments = static::filterSegments($path);
+        }
+
+        if (array_key_exists('query', $parts)) {
+            parse_str($parts['query'], $this->query);
+        }
+
+        if (array_key_exists('fragment', $parts)) {
+            $fragment = rawurldecode($parts['fragment']);
+
+            $this->fragment = static::filterFragment($fragment);
+        }
 
         return $this;
     }
 
     /**
-     * Remove dot segments from a path.
-     * @param string $path The path.
-     * @return string The path with dot segments removed.
+     * Filter the fragment.
+     * @param string $fragment The fragment.
+     * @return string The filtered fragment.
      */
-    protected static function removeDotSegments(string $path): string
+    protected static function filterFragment(string $fragment): string
+    {
+        return static::trim($fragment, '#');
+    }
+
+    /**
+     * Filter the path, and remove dot segments.
+     * @param string $path The path.
+     * @return string The filtered path.
+     */
+    protected static function filterPath(string $path): string
     {
         if ($path === '' || $path === '/') {
             return $path;
@@ -542,6 +596,59 @@ class Uri
         }
 
         return $newPath;
+    }
+
+    /**
+     * Filter the port.
+     * @param string|int|null $port The port.
+     * @return int|null The filtered port.
+     */
+    protected static function filterPort(string|int|null $port): int|null
+    {
+        if ($port === null) {
+            return null;
+        }
+
+        if ($port <= 0 || $port > 65535) {
+            throw new InvalidArgumentException('Invalid Port: '.$port);
+        }
+
+        return (int) $port;
+    }
+
+    /**
+     * Filter the scheme.
+     * @param string $scheme The scheme.
+     * @return string The filtered scheme.
+     */
+    protected static function filterScheme(string $scheme): string
+    {
+        $scheme = strtolower($scheme);
+
+        return static::trim($scheme, ':/');
+    }
+
+    /**
+     * Filter the path segments.
+     * @param string $path The path.
+     * @return array The segments.
+     */
+    protected static function filterSegments(string $path): array
+    {
+        $path = static::trim($path, '/');
+
+        return explode('/', $path);
+    }
+
+    /**
+     * Trim a string.
+     * @param string $string The input string.
+     * @param string $extraChars Extra characters to trim.
+     * @return string The trimmed string.
+     */
+    protected static function trim(string $string, string $extraChars = ''): string
+    {
+        return trim($string, static::WHITESPACE.$extraChars);
     }
 
 }

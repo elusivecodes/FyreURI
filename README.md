@@ -1,6 +1,6 @@
 # FyreURI
 
-**FyreURI** is a free, URI library for *PHP*.
+**FyreURI** is a free, open-source immutable URI library for *PHP*.
 
 
 ## Table Of Contents
@@ -21,7 +21,7 @@ composer require fyre/uri
 In PHP:
 
 ```php
-use Fyre\URI\Uri;
+use Fyre\Http\Uri;
 ```
 
 ## Uri Creation
@@ -32,10 +32,10 @@ use Fyre\URI\Uri;
 $uri = new Uri($uriString);
 ```
 
-Alternatively, you can use the `create` method for easier chaining.
+Alternatively, you can use the `fromString` method for easier chaining.
 
 ```php
-$uri = Uri::create($uriString);
+$uri = Uri::fromString($uriString);
 ```
 
 
@@ -49,7 +49,7 @@ Add a query parameter.
 - `$value` is the query value.
 
 ```php
-$uri->addQuery($key, $value);
+$newUri = $uri->addQuery($key, $value);
 ```
 
 **Except Query**
@@ -59,7 +59,7 @@ Remove query parameters.
 - `$keys` is an array containing the query parameters to remove.
 
 ```php
-$uri->exceptQuery($keys);
+$newUri = $uri->exceptQuery($keys);
 ```
 
 **Get Authority**
@@ -141,7 +141,7 @@ $part = $uri->getSegment($segment);
 Get the URI segments.
 
 ```php
-$parts = $uri->getSegments();
+$segments = $uri->getSegments();
 ```
 
 **Get Total Segments**
@@ -149,7 +149,7 @@ $parts = $uri->getSegments();
 Get the URI segments count.
 
 ```php
-$segments = $uri->getTotalSegments();
+$segmentCount = $uri->getTotalSegments();
 ```
 
 **Get Uri**
@@ -175,17 +175,7 @@ Filter query parameters.
 - `$keys` is an array containing the query parameters to keep.
 
 ```php
-$uri->onlyQuery($keys);
-```
-
-**Resolve Relative Uri**
-
-Resolve a relative URI.
-
-- `$uriString` is a string representing the uri.
-
-```php
-$uri->resolveRelativeUri($uriString);
+$newUri = $uri->onlyQuery($keys);
 ```
 
 **Set Authority**
@@ -195,7 +185,7 @@ Set the URI authority string.
 - `$authority` is a string representing the authority.
 
 ```php
-$uri->setAuthority($authority);
+$newUri = $uri->setAuthority($authority);
 ```
 
 **Set Fragment**
@@ -205,7 +195,7 @@ Set the URI fragment.
 - `$fragment` is a string representing the fragment.
 
 ```php
-$uri->setFragment($fragment);
+$newUri = $uri->setFragment($fragment);
 ```
 
 **Set Host**
@@ -215,7 +205,7 @@ Set the URI host.
 - `$host` is a string representing the host.
 
 ```php
-$uri->setHost($host);
+$newUri = $uri->setHost($host);
 ```
 
 **Set Path**
@@ -225,7 +215,7 @@ Set the URI path.
 - `$path` is a string representing the path.
 
 ```php
-$uri->setPath($path);
+$newUri = $uri->setPath($path);
 ```
 
 **Set Port**
@@ -235,7 +225,7 @@ Get the URI port.
 - `$port` is a number representing the port.
 
 ```php
-$uri->setPort($port);
+$newUri = $uri->setPort($port);
 ```
 
 **Set Query**
@@ -245,7 +235,7 @@ Get the URI query array.
 - `$query` is an array containing the query parameters.
 
 ```php
-$uri->setQuery($query);
+$newUri = $uri->setQuery($query);
 ```
 
 **Set Query String**
@@ -255,7 +245,7 @@ Get the URI query string.
 - `$query` is a string representing the query parameters.
 
 ```php
-$uri->setQueryString($query);
+$newUri = $uri->setQueryString($query);
 ```
 
 **Set Scheme**
@@ -265,7 +255,7 @@ Get the URI scheme.
 - `$scheme` is a string representing the scheme.
 
 ```php
-$uri->setScheme($scheme);
+$newUri = $uri->setScheme($scheme);
 ```
 
 **Set User Info**
@@ -276,5 +266,5 @@ Get the user info string.
 - `$password` is a string representing the password, and will default to *""*.
 
 ```php
-$uri->setUserInfo($username, $password);
+$newUri = $uri->setUserInfo($username, $password);
 ```
