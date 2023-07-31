@@ -332,6 +332,7 @@ class Uri
      * Set the URI authority string.
      * @param string $authority The authority string.
      * @return Uri A new Uri.
+     * @throws InvalidArgumentException if the authority is not valid.
      */
     public function setAuthority(string $authority)
     {
@@ -406,7 +407,6 @@ class Uri
      * Set the URI port.
      * @param int|null $port The URI port.
      * @return Uri A new Uri.
-     * @throws InvalidArgumentException if the port is invalid.
      */
     public function setPort(int|null $port = null): static
     {
@@ -479,7 +479,7 @@ class Uri
      * Set the URI string.
      * @param string $uri The URI string.
      * @return Uri The Uri.
-     * @throws InvalidArgumentException if the URI is invalid.
+     * @throws InvalidArgumentException if the URI is not valid.
      */
     protected function parseUri(string $uri = ''): static
     {
@@ -602,6 +602,7 @@ class Uri
      * Filter the port.
      * @param string|int|null $port The port.
      * @return int|null The filtered port.
+     * @throws InvalidArgumentException if the port is not valid.
      */
     protected static function filterPort(string|int|null $port): int|null
     {
