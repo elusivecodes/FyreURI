@@ -61,7 +61,7 @@ class Uri
     /**
      * Create a new Uri.
      * @param string $uri The URI string.
-     * 
+     * @return Uri A new Uri.
      */
     public static function fromString(string $uri = ''): static
     {
@@ -99,7 +99,7 @@ class Uri
      * Add a query parameter.
      * @param string $key The key.
      * @param mixed $value The value.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      */
     public function addQuery(string $key, mixed $value = null): static
     {
@@ -113,7 +113,7 @@ class Uri
     /**
      * Remove query parameters.
      * @param array $keys The query parameters to remove.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      */
     public function exceptQuery(array $keys): static
     {
@@ -303,7 +303,7 @@ class Uri
     /**
      * Filter query parameters.
      * @param array $keys The query parameters to keep.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      */
     public function onlyQuery(array $keys): static
     {
@@ -319,7 +319,7 @@ class Uri
     /**
      * Resolve a relative URI.
      * @param string $uri The URI string.
-     * @return URI The URI.
+     * @return Uri A new Uri.
      */
     public function resolveRelativeUri(string $uri): static
     {
@@ -331,7 +331,7 @@ class Uri
     /**
      * Set the URI authority string.
      * @param string $authority The authority string.
-     * @return URI The URI.
+     * @return Uri A new Uri.
      */
     public function setAuthority(string $authority)
     {
@@ -362,7 +362,7 @@ class Uri
     /**
      * Set the URI fragment.
      * @param string $fragment The URI fragment.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      */
     public function setFragment(string $fragment = ''): static
     {
@@ -376,7 +376,7 @@ class Uri
     /**
      * Set the URI host.
      * @param string $host The URI host.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      */
     public function setHost(string $host = ''): static
     {
@@ -390,7 +390,7 @@ class Uri
     /**
      * Set the URI path.
      * @param string $path The URI path.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      */
     public function setPath(string $path)
     {
@@ -405,7 +405,7 @@ class Uri
     /**
      * Set the URI port.
      * @param int|null $port The URI port.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      * @throws InvalidArgumentException if the port is invalid.
      */
     public function setPort(int|null $port = null): static
@@ -420,7 +420,7 @@ class Uri
     /**
      * Set the query array.
      * @param array $query The query array.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      */
     public function setQuery(array $query): static
     {
@@ -432,7 +432,7 @@ class Uri
     /**
      * Set the URI query string.
      * @param string $query The URI query string.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      */
     public function setQueryString(string $query): static
     {
@@ -448,7 +448,7 @@ class Uri
     /**
      * Set the URI scheme.
      * @param string $scheme The URI scheme.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      */
     public function setScheme(string $scheme): static
     {
@@ -463,7 +463,7 @@ class Uri
      * Set the user info.
      * @param string $user The user.
      * @param string $password The password.
-     * @return URI The new URI.
+     * @return Uri A new Uri.
      */
     public function setUserInfo(string $user, string $password = ''): static
     {
@@ -478,7 +478,7 @@ class Uri
     /**
      * Set the URI string.
      * @param string $uri The URI string.
-     * @return URI The URI.
+     * @return Uri The Uri.
      * @throws InvalidArgumentException if the URI is invalid.
      */
     protected function parseUri(string $uri = ''): static
