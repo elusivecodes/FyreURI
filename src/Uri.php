@@ -80,7 +80,7 @@ class Uri
     /**
      * Clone callback.
      */
-    public function __clone()
+    public function __clone(): void
     {
         $this->queryString = null;
         $this->uriString = null;
@@ -334,7 +334,7 @@ class Uri
      * @return Uri A new Uri.
      * @throws InvalidArgumentException if the authority is not valid.
      */
-    public function setAuthority(string $authority)
+    public function setAuthority(string $authority): static
     {
         if ($authority && strpos($authority, '://') === false) {
             $authority = '//'.ltrim($authority, '/');
@@ -393,7 +393,7 @@ class Uri
      * @param string $path The URI path.
      * @return Uri A new Uri.
      */
-    public function setPath(string $path)
+    public function setPath(string $path): static
     {
         $temp = clone $this;
 
