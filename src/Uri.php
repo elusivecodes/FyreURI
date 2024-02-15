@@ -573,7 +573,7 @@ class Uri
         $segments = explode('/', $path);
 
         foreach ($segments AS $segment) {
-            if (!$segment || $segment === '.') {
+            if ($segment === '' || $segment === '.') {
                 continue;
             }
 
