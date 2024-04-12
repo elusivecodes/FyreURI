@@ -398,7 +398,7 @@ class Uri
         $temp = clone $this;
 
         $temp->path = static::filterPath($path);
-        $temp->segments = static::filterSegments($path);
+        $temp->segments = static::filterSegments($temp->path);
 
         return $temp;
     }
@@ -531,7 +531,7 @@ class Uri
             }
 
             $this->path = static::filterPath($path);
-            $this->segments = static::filterSegments($path);
+            $this->segments = static::filterSegments($this->path);
         }
 
         if (array_key_exists('query', $parts)) {
@@ -580,7 +580,7 @@ class Uri
             if ($segment === '..') {
                 array_pop($newSegments);
             } else {
-                $newSegments[] = $segment;
+                $newSegments[] = rawurldecode($segment);
             }
         }
 
