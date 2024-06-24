@@ -7,23 +7,6 @@ use Fyre\Http\Uri;
 
 trait UriRelativeTestTrait
 {
-
-    public function testRelativePath(): void
-    {
-        $uri1 = Uri::fromString('http://domain.com/path');
-        $uri2 = $uri1->resolveRelativeUri('deep');
-
-        $this->assertSame(
-            'http://domain.com/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'http://domain.com/path/deep',
-            $uri2->getUri()
-        );
-    }
-
     public function testRelativeFullPath(): void
     {
         $uri1 = Uri::fromString('http://domain.com/path');
@@ -56,6 +39,22 @@ trait UriRelativeTestTrait
         );
     }
 
+    public function testRelativePath(): void
+    {
+        $uri1 = Uri::fromString('http://domain.com/path');
+        $uri2 = $uri1->resolveRelativeUri('deep');
+
+        $this->assertSame(
+            'http://domain.com/path',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'http://domain.com/path/deep',
+            $uri2->getUri()
+        );
+    }
+
     public function testRelativeUri(): void
     {
         $uri1 = Uri::fromString('http://domain.com/path');
@@ -63,166 +62,6 @@ trait UriRelativeTestTrait
 
         $this->assertSame(
             'http://domain.com/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'http://test.com/',
-            $uri2->getUri()
-        );
-    }
-
-    public function testRelativeUriWithScheme(): void
-    {
-        $uri1 = Uri::fromString('http://domain.com/path');
-        $uri2 = $uri1->resolveRelativeUri('https://test.com');
-
-        $this->assertSame(
-            'http://domain.com/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'https://test.com/',
-            $uri2->getUri()
-        );
-    }
-
-    public function testRelativeUriWithoutScheme(): void
-    {
-        $uri1 = Uri::fromString('http://domain.com/path');
-        $uri2 = $uri1->resolveRelativeUri('//test.com');
-
-        $this->assertSame(
-            'http://domain.com/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'test.com/',
-            $uri2->getUri()
-        );
-    }
-
-    public function testRelativeUriWithPort(): void
-    {
-        $uri1 = Uri::fromString('http://domain.com/path');
-        $uri2 = $uri1->resolveRelativeUri('http://test.com:3000');
-
-        $this->assertSame(
-            'http://domain.com/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'http://test.com:3000/',
-            $uri2->getUri()
-        );
-    }
-
-    public function testRelativeUriWithoutPort(): void
-    {
-        $uri1 = Uri::fromString('http://domain.com:3000/path');
-        $uri2 = $uri1->resolveRelativeUri('http://test.com');
-
-        $this->assertSame(
-            'http://domain.com:3000/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'http://test.com/',
-            $uri2->getUri()
-        );
-    }
-
-    public function testRelativeUriWithUsername(): void
-    {
-        $uri1 = Uri::fromString('http://domain.com/path');
-        $uri2 = $uri1->resolveRelativeUri('http://user@test.com');
-
-        $this->assertSame(
-            'http://domain.com/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'http://user@test.com/',
-            $uri2->getUri()
-        );
-    }
-
-    public function testRelativeUriWithoutUsername(): void
-    {
-        $uri1 = Uri::fromString('http://user@domain.com/path');
-        $uri2 = $uri1->resolveRelativeUri('http://test.com');
-
-        $this->assertSame(
-            'http://user@domain.com/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'http://test.com/',
-            $uri2->getUri()
-        );
-    }
-
-    public function testRelativeUriWithPassword(): void
-    {
-        $uri1 = Uri::fromString('http://domain.com/path');
-        $uri2 = $uri1->resolveRelativeUri('http://user:password@test.com');
-
-        $this->assertSame(
-            'http://domain.com/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'http://user:password@test.com/',
-            $uri2->getUri()
-        );
-    }
-
-    public function testRelativeUriWithoutPassword(): void
-    {
-        $uri1 = Uri::fromString('http://user:password@domain.com/path');
-        $uri2 = $uri1->resolveRelativeUri('http://test.com');
-
-        $this->assertSame(
-            'http://user:password@domain.com/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'http://test.com/',
-            $uri2->getUri()
-        );
-    }
-
-    public function testRelativeUriWithQuery(): void
-    {
-        $uri1 = Uri::fromString('http://domain.com/path');
-        $uri2 = $uri1->resolveRelativeUri('http://test.com/?test=1');
-
-        $this->assertSame(
-            'http://domain.com/path',
-            $uri1->getUri()
-        );
-
-        $this->assertSame(
-            'http://test.com/?test=1',
-            $uri2->getUri()
-        );
-    }
-
-    public function testRelativeUriWithoutQuery(): void
-    {
-        $uri1 = Uri::fromString('http://domain.com:3000/path?test=1');
-        $uri2 = $uri1->resolveRelativeUri('http://test.com');
-
-        $this->assertSame(
-            'http://domain.com:3000/path?test=1',
             $uri1->getUri()
         );
 
@@ -264,4 +103,163 @@ trait UriRelativeTestTrait
         );
     }
 
+    public function testRelativeUriWithoutPassword(): void
+    {
+        $uri1 = Uri::fromString('http://user:password@domain.com/path');
+        $uri2 = $uri1->resolveRelativeUri('http://test.com');
+
+        $this->assertSame(
+            'http://user:password@domain.com/path',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'http://test.com/',
+            $uri2->getUri()
+        );
+    }
+
+    public function testRelativeUriWithoutPort(): void
+    {
+        $uri1 = Uri::fromString('http://domain.com:3000/path');
+        $uri2 = $uri1->resolveRelativeUri('http://test.com');
+
+        $this->assertSame(
+            'http://domain.com:3000/path',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'http://test.com/',
+            $uri2->getUri()
+        );
+    }
+
+    public function testRelativeUriWithoutQuery(): void
+    {
+        $uri1 = Uri::fromString('http://domain.com:3000/path?test=1');
+        $uri2 = $uri1->resolveRelativeUri('http://test.com');
+
+        $this->assertSame(
+            'http://domain.com:3000/path?test=1',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'http://test.com/',
+            $uri2->getUri()
+        );
+    }
+
+    public function testRelativeUriWithoutScheme(): void
+    {
+        $uri1 = Uri::fromString('http://domain.com/path');
+        $uri2 = $uri1->resolveRelativeUri('//test.com');
+
+        $this->assertSame(
+            'http://domain.com/path',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'test.com/',
+            $uri2->getUri()
+        );
+    }
+
+    public function testRelativeUriWithoutUsername(): void
+    {
+        $uri1 = Uri::fromString('http://user@domain.com/path');
+        $uri2 = $uri1->resolveRelativeUri('http://test.com');
+
+        $this->assertSame(
+            'http://user@domain.com/path',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'http://test.com/',
+            $uri2->getUri()
+        );
+    }
+
+    public function testRelativeUriWithPassword(): void
+    {
+        $uri1 = Uri::fromString('http://domain.com/path');
+        $uri2 = $uri1->resolveRelativeUri('http://user:password@test.com');
+
+        $this->assertSame(
+            'http://domain.com/path',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'http://user:password@test.com/',
+            $uri2->getUri()
+        );
+    }
+
+    public function testRelativeUriWithPort(): void
+    {
+        $uri1 = Uri::fromString('http://domain.com/path');
+        $uri2 = $uri1->resolveRelativeUri('http://test.com:3000');
+
+        $this->assertSame(
+            'http://domain.com/path',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'http://test.com:3000/',
+            $uri2->getUri()
+        );
+    }
+
+    public function testRelativeUriWithQuery(): void
+    {
+        $uri1 = Uri::fromString('http://domain.com/path');
+        $uri2 = $uri1->resolveRelativeUri('http://test.com/?test=1');
+
+        $this->assertSame(
+            'http://domain.com/path',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'http://test.com/?test=1',
+            $uri2->getUri()
+        );
+    }
+
+    public function testRelativeUriWithScheme(): void
+    {
+        $uri1 = Uri::fromString('http://domain.com/path');
+        $uri2 = $uri1->resolveRelativeUri('https://test.com');
+
+        $this->assertSame(
+            'http://domain.com/path',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'https://test.com/',
+            $uri2->getUri()
+        );
+    }
+
+    public function testRelativeUriWithUsername(): void
+    {
+        $uri1 = Uri::fromString('http://domain.com/path');
+        $uri2 = $uri1->resolveRelativeUri('http://user@test.com');
+
+        $this->assertSame(
+            'http://domain.com/path',
+            $uri1->getUri()
+        );
+
+        $this->assertSame(
+            'http://user@test.com/',
+            $uri2->getUri()
+        );
+    }
 }

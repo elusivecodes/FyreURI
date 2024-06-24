@@ -5,8 +5,6 @@ namespace Fyre\Http;
 
 use InvalidArgumentException;
 
-use const ARRAY_FILTER_USE_KEY;
-
 use function array_filter;
 use function array_key_exists;
 use function array_map;
@@ -28,12 +26,13 @@ use function strtolower;
 use function substr;
 use function trim;
 
+use const ARRAY_FILTER_USE_KEY;
+
 /**
  * Uri
  */
 class Uri
 {
-
     protected const DEFAULT_PORTS = [
         'ftp' => 21,
         'sftp' => 22,
@@ -43,30 +42,18 @@ class Uri
 
     protected const WHITESPACE = " \n\r\t\v\x00";
 
-    protected string $scheme = '';
-    protected string $user = '';
-    protected string $password = '';
-    protected string $host = '';
-    protected int|null $port = null;
-    protected string $path = '';
-    protected array $segments = [];
-    protected array $query = [];
     protected string $fragment = '';
-
-    protected string|null $uriString = null;
+    protected string $host = '';
+    protected string $password = '';
+    protected string $path = '';
+    protected int|null $port = null;
+    protected array $query = [];
     protected string|null $queryString = null;
-
+    protected string $scheme = '';
+    protected array $segments = [];
     protected bool $showPassword = true;
-
-    /**
-     * Create a new Uri.
-     * @param string $uri The URI string.
-     * @return Uri A new Uri.
-     */
-    public static function fromString(string $uri = ''): static
-    {
-        return new static($uri);
-    }
+    protected string|null $uriString = null;
+    protected string $user = '';
 
     /**
      * New Uri constructor.
@@ -124,6 +111,16 @@ class Uri
         );
 
         return $this->setQuery($query);
+    }
+
+    /**
+     * Create a new Uri.
+     * @param string $uri The URI string.
+     * @return Uri A new Uri.
+     */
+    public static function fromString(string $uri = ''): static
+    {
+        return new static($uri);
     }
 
     /**
@@ -476,6 +473,100 @@ class Uri
     }
 
     /**
+     * Filter the fragment.
+     * @param string $fragment The fragment.
+     * @return string The filtered fragment.
+     */
+    protected static function filterFragment(string $fragment): string
+    {
+        return static::trim($fragment, '#');
+    }
+
+    /**
+     * Filter the path, and remove dot segments.
+     * @param string $path The path.
+     * @return string The filtered path.
+     */
+    protected static function filterPath(string $path): string
+    {
+        if ($path === '' || $path === '/') {
+            return $path;
+        }
+
+        $newSegments = [];
+
+        $segments = explode('/', $path);
+
+        foreach ($segments as $segment) {
+            if ($segment === '' || $segment === '.') {
+                continue;
+            }
+
+            if ($segment === '..') {
+                array_pop($newSegments);
+            } else {
+                $newSegments[] = rawurldecode($segment);
+            }
+        }
+
+        $newPath = implode('/', $newSegments);
+        $newPath = trim($newPath, '/ ');
+
+        if (str_starts_with($path, '/')) {
+            $newPath = '/'.$newPath;
+        }
+
+        if (substr($path, -1, 1) === '/') {
+            $newPath = rtrim($newPath).'/';
+        }
+
+        return $newPath;
+    }
+
+    /**
+     * Filter the port.
+     * @param string|int|null $port The port.
+     * @return int|null The filtered port.
+     * @throws InvalidArgumentException if the port is not valid.
+     */
+    protected static function filterPort(int|string|null $port): int|null
+    {
+        if ($port === null) {
+            return null;
+        }
+
+        if ($port <= 0 || $port > 65535) {
+            throw new InvalidArgumentException('Invalid Port: '.$port);
+        }
+
+        return (int) $port;
+    }
+
+    /**
+     * Filter the scheme.
+     * @param string $scheme The scheme.
+     * @return string The filtered scheme.
+     */
+    protected static function filterScheme(string $scheme): string
+    {
+        $scheme = strtolower($scheme);
+
+        return static::trim($scheme, ':/');
+    }
+
+    /**
+     * Filter the path segments.
+     * @param string $path The path.
+     * @return array The segments.
+     */
+    protected static function filterSegments(string $path): array
+    {
+        $path = static::trim($path, '/');
+
+        return explode('/', $path);
+    }
+
+    /**
      * Set the URI string.
      * @param string $uri The URI string.
      * @return Uri The Uri.
@@ -548,100 +639,6 @@ class Uri
     }
 
     /**
-     * Filter the fragment.
-     * @param string $fragment The fragment.
-     * @return string The filtered fragment.
-     */
-    protected static function filterFragment(string $fragment): string
-    {
-        return static::trim($fragment, '#');
-    }
-
-    /**
-     * Filter the path, and remove dot segments.
-     * @param string $path The path.
-     * @return string The filtered path.
-     */
-    protected static function filterPath(string $path): string
-    {
-        if ($path === '' || $path === '/') {
-            return $path;
-        }
-
-        $newSegments = [];
-
-        $segments = explode('/', $path);
-
-        foreach ($segments AS $segment) {
-            if ($segment === '' || $segment === '.') {
-                continue;
-            }
-
-            if ($segment === '..') {
-                array_pop($newSegments);
-            } else {
-                $newSegments[] = rawurldecode($segment);
-            }
-        }
-
-        $newPath = implode('/', $newSegments);
-        $newPath = trim($newPath, '/ ');
-
-        if (str_starts_with($path, '/')) {
-            $newPath = '/'.$newPath;
-        }
-
-        if (substr($path, -1, 1) === '/') {
-            $newPath = rtrim($newPath).'/';
-        }
-
-        return $newPath;
-    }
-
-    /**
-     * Filter the port.
-     * @param string|int|null $port The port.
-     * @return int|null The filtered port.
-     * @throws InvalidArgumentException if the port is not valid.
-     */
-    protected static function filterPort(string|int|null $port): int|null
-    {
-        if ($port === null) {
-            return null;
-        }
-
-        if ($port <= 0 || $port > 65535) {
-            throw new InvalidArgumentException('Invalid Port: '.$port);
-        }
-
-        return (int) $port;
-    }
-
-    /**
-     * Filter the scheme.
-     * @param string $scheme The scheme.
-     * @return string The filtered scheme.
-     */
-    protected static function filterScheme(string $scheme): string
-    {
-        $scheme = strtolower($scheme);
-
-        return static::trim($scheme, ':/');
-    }
-
-    /**
-     * Filter the path segments.
-     * @param string $path The path.
-     * @return array The segments.
-     */
-    protected static function filterSegments(string $path): array
-    {
-        $path = static::trim($path, '/');
-
-        return explode('/', $path);
-    }
-
-    /**
      * Trim a string.
      * @param string $string The input string.
      * @param string $extraChars Extra characters to trim.
@@ -651,5 +648,4 @@ class Uri
     {
         return trim($string, static::WHITESPACE.$extraChars);
     }
-
 }

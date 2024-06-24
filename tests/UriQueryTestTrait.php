@@ -7,7 +7,6 @@ use Fyre\Http\Uri;
 
 trait UriQueryTestTrait
 {
-
     public function testAddQuery(): void
     {
         $uri1 = Uri::fromString('/?param1=a&param2=b');
@@ -75,5 +74,4 @@ trait UriQueryTestTrait
             $uri2->getQuery()
         );
     }
-
 }

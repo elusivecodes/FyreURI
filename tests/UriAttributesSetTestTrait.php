@@ -8,7 +8,6 @@ use InvalidArgumentException;
 
 trait UriAttributesSetTestTrait
 {
-
     public function testSetAuthority(): void
     {
         $uri1 = new Uri();
@@ -121,22 +120,6 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetPathWithLeadingSlash(): void
-    {
-        $uri1 = new Uri();
-        $uri2 = $uri1->setPath('/test/deep');
-
-        $this->assertSame(
-            '',
-            $uri1->getPath()
-        );
-
-        $this->assertSame(
-            '/test/deep',
-            $uri2->getPath()
-        );
-    }
-
     public function testSetPathWithDots(): void
     {
         $uri1 = new Uri();
@@ -149,6 +132,22 @@ trait UriAttributesSetTestTrait
 
         $this->assertSame(
             'deep',
+            $uri2->getPath()
+        );
+    }
+
+    public function testSetPathWithLeadingSlash(): void
+    {
+        $uri1 = new Uri();
+        $uri2 = $uri1->setPath('/test/deep');
+
+        $this->assertSame(
+            '',
+            $uri1->getPath()
+        );
+
+        $this->assertSame(
+            '/test/deep',
             $uri2->getPath()
         );
     }
@@ -279,5 +278,4 @@ trait UriAttributesSetTestTrait
             $uri2->getUserInfo()
         );
     }
-
 }

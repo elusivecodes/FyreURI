@@ -7,12 +7,19 @@ use Fyre\Http\Uri;
 
 trait UriAttributesGetTestTrait
 {
-
     public function testGetAuthority(): void
     {
         $this->assertSame(
             'domain.com',
             Uri::fromString('http://domain.com/')->getAuthority()
+        );
+    }
+
+    public function testGetAuthorityWithPassword(): void
+    {
+        $this->assertSame(
+            'user:password@domain.com',
+            Uri::fromString('http://user:password@domain.com/')->getAuthority()
         );
     }
 
@@ -29,14 +36,6 @@ trait UriAttributesGetTestTrait
         $this->assertSame(
             'user@domain.com',
             Uri::fromString('http://user@domain.com/')->getAuthority()
-        );
-    }
-
-    public function testGetAuthorityWithPassword(): void
-    {
-        $this->assertSame(
-            'user:password@domain.com',
-            Uri::fromString('http://user:password@domain.com/')->getAuthority()
         );
     }
 
@@ -155,14 +154,6 @@ trait UriAttributesGetTestTrait
         );
     }
 
-    public function testGetUserInfoWithPassword(): void
-    {
-        $this->assertSame(
-            'user:password',
-            Uri::fromString('http://user:password@domain.com/')->getUserInfo()
-        );
-    }
-
     public function testGetUserInfoEncoded(): void
     {
         $this->assertSame(
@@ -171,4 +162,11 @@ trait UriAttributesGetTestTrait
         );
     }
 
+    public function testGetUserInfoWithPassword(): void
+    {
+        $this->assertSame(
+            'user:password',
+            Uri::fromString('http://user:password@domain.com/')->getUserInfo()
+        );
+    }
 }

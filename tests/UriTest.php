@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 final class UriTest extends TestCase
 {
-
     use UriAttributesGetTestTrait;
     use UriAttributesSetTestTrait;
     use UriQueryTestTrait;
@@ -23,19 +22,26 @@ final class UriTest extends TestCase
         );
     }
 
-    public function testUriWithPort(): void
+    public function testUriInvalid(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        Uri::fromString('https:///domain.com/');
+    }
+
+    public function testUriWithFragment(): void
     {
         $this->assertEquals(
-            'https://domain.com:3000/',
-            Uri::fromString('https://domain.com:3000/')->getUri()
+            'https://domain.com/#test',
+            Uri::fromString('https://domain.com/#test')->getUri()
         );
     }
 
-    public function testUriWithUsername(): void
+    public function testUriWithoutHost(): void
     {
         $this->assertEquals(
-            'https://user@domain.com/',
-            Uri::fromString('https://user@domain.com/')->getUri()
+            '/path/deep',
+            Uri::fromString('/path/deep')->getUri()
         );
     }
 
@@ -55,27 +61,19 @@ final class UriTest extends TestCase
         );
     }
 
+    public function testUriWithPort(): void
+    {
+        $this->assertEquals(
+            'https://domain.com:3000/',
+            Uri::fromString('https://domain.com:3000/')->getUri()
+        );
+    }
+
     public function testUriWithQuery(): void
     {
         $this->assertEquals(
             'https://domain.com/?test=1',
             Uri::fromString('https://domain.com/?test=1')->getUri()
-        );
-    }
-
-    public function testUriWithFragment(): void
-    {
-        $this->assertEquals(
-            'https://domain.com/#test',
-            Uri::fromString('https://domain.com/#test')->getUri()
-        );
-    }
-
-    public function testUriWithoutHost(): void
-    {
-        $this->assertEquals(
-            '/path/deep',
-            Uri::fromString('/path/deep')->getUri()
         );
     }
 
@@ -87,11 +85,11 @@ final class UriTest extends TestCase
         );
     }
 
-    public function testUriInvalid(): void
+    public function testUriWithUsername(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-
-        Uri::fromString('https:///domain.com/');
+        $this->assertEquals(
+            'https://user@domain.com/',
+            Uri::fromString('https://user@domain.com/')->getUri()
+        );
     }
-
 }
