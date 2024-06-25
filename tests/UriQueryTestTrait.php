@@ -15,7 +15,7 @@ trait UriQueryTestTrait
         $this->assertSame(
             [
                 'param1' => 'a',
-                'param2' => 'b'
+                'param2' => 'b',
             ],
             $uri1->getQuery()
         );
@@ -24,7 +24,7 @@ trait UriQueryTestTrait
             [
                 'param1' => 'a',
                 'param2' => 'b',
-                'param3' => 'c'
+                'param3' => 'c',
             ],
             $uri2->getQuery()
         );
@@ -39,7 +39,7 @@ trait UriQueryTestTrait
             [
                 'param1' => 'a',
                 'param2' => 'b',
-                'param3' => 'c'
+                'param3' => 'c',
             ],
             $uri1->getQuery()
         );
@@ -47,7 +47,7 @@ trait UriQueryTestTrait
         $this->assertSame(
             [
                 'param2' => 'b',
-                'param3' => 'c'
+                'param3' => 'c',
             ],
             $uri2->getQuery()
         );
@@ -62,14 +62,14 @@ trait UriQueryTestTrait
             [
                 'param1' => 'a',
                 'param2' => 'b',
-                'param3' => 'c'
+                'param3' => 'c',
             ],
             $uri1->getQuery()
         );
 
         $this->assertSame(
             [
-                'param1' => 'a'
+                'param1' => 'a',
             ],
             $uri2->getQuery()
         );

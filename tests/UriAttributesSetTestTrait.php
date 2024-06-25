@@ -179,7 +179,7 @@ trait UriAttributesSetTestTrait
     {
         $uri1 = new Uri();
         $uri2 = $uri1->setQuery([
-            'test' => 'a'
+            'test' => 'a',
         ]);
 
         $this->assertSame(
@@ -189,7 +189,7 @@ trait UriAttributesSetTestTrait
 
         $this->assertSame(
             [
-                'test' => 'a'
+                'test' => 'a',
             ],
             $uri2->getQuery()
         );
@@ -207,7 +207,7 @@ trait UriAttributesSetTestTrait
 
         $this->assertSame(
             [
-                'test' => 'a'
+                'test' => 'a',
             ],
             $uri2->getQuery()
         );
@@ -225,7 +225,7 @@ trait UriAttributesSetTestTrait
 
         $this->assertSame(
             [
-                'test' => 'a'
+                'test' => 'a',
             ],
             $uri2->getQuery()
         );

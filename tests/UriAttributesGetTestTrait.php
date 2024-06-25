@@ -84,7 +84,7 @@ trait UriAttributesGetTestTrait
         $this->assertSame(
             [
                 'param1' => 'a',
-                'param2' => 'b'
+                'param2' => 'b',
             ],
             Uri::fromString('http://domain.com/?param1=a&param2=b')->getQuery()
         );

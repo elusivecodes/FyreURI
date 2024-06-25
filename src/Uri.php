@@ -37,26 +37,49 @@ class Uri
         'ftp' => 21,
         'sftp' => 22,
         'http' => 80,
-        'https' => 443
+        'https' => 443,
     ];
 
     protected const WHITESPACE = " \n\r\t\v\x00";
 
     protected string $fragment = '';
+
     protected string $host = '';
+
     protected string $password = '';
+
     protected string $path = '';
+
     protected int|null $port = null;
+
     protected array $query = [];
+
     protected string|null $queryString = null;
+
     protected string $scheme = '';
+
     protected array $segments = [];
+
     protected bool $showPassword = true;
+
     protected string|null $uriString = null;
+
     protected string $user = '';
 
     /**
+     * Create a new Uri.
+     *
+     * @param string $uri The URI string.
+     * @return Uri A new Uri.
+     */
+    public static function fromString(string $uri = ''): static
+    {
+        return new static($uri);
+    }
+
+    /**
      * New Uri constructor.
+     *
      * @param string $uri The URI string.
      */
     public function __construct(string $uri = '')
@@ -75,6 +98,7 @@ class Uri
 
     /**
      * Get the URI string.
+     *
      * @return string The URI string.
      */
     public function __toString(): string
@@ -84,6 +108,7 @@ class Uri
 
     /**
      * Add a query parameter.
+     *
      * @param string $key The key.
      * @param mixed $value The value.
      * @return Uri A new Uri.
@@ -99,6 +124,7 @@ class Uri
 
     /**
      * Remove query parameters.
+     *
      * @param array $keys The query parameters to remove.
      * @return Uri A new Uri.
      */
@@ -114,17 +140,8 @@ class Uri
     }
 
     /**
-     * Create a new Uri.
-     * @param string $uri The URI string.
-     * @return Uri A new Uri.
-     */
-    public static function fromString(string $uri = ''): static
-    {
-        return new static($uri);
-    }
-
-    /**
      * Get the URI authority string.
+     *
      * @return string The URI authority string.
      */
     public function getAuthority(): string
@@ -150,6 +167,7 @@ class Uri
 
     /**
      * Get the URI fragment.
+     *
      * @return string The URI fragment.
      */
     public function getFragment(): string
@@ -159,6 +177,7 @@ class Uri
 
     /**
      * Get the URI host.
+     *
      * @return string The URI host.
      */
     public function getHost(): string
@@ -168,6 +187,7 @@ class Uri
 
     /**
      * Get the URI path.
+     *
      * @return string The URI path.
      */
     public function getPath(): string
@@ -180,6 +200,7 @@ class Uri
 
     /**
      * Get the URI port.
+     *
      * @return int|null The URI port.
      */
     public function getPort(): int|null
@@ -189,6 +210,7 @@ class Uri
 
     /**
      * Get the URI query array.
+     *
      * @return array The URI query array.
      */
     public function getQuery(): array
@@ -198,6 +220,7 @@ class Uri
 
     /**
      * Get the URI query string.
+     *
      * @return string The URI query string.
      */
     public function getQueryString(): string
@@ -207,6 +230,7 @@ class Uri
 
     /**
      * Get the URI scheme.
+     *
      * @return string The URI scheme.
      */
     public function getScheme(): string
@@ -216,6 +240,7 @@ class Uri
 
     /**
      * Get a specified URI segment.
+     *
      * @param int $segment The URI segment index.
      * @return string The URI segment.
      */
@@ -226,6 +251,7 @@ class Uri
 
     /**
      * Get the URI segments.
+     *
      * @return array The URI segments.
      */
     public function getSegments(): array
@@ -235,6 +261,7 @@ class Uri
 
     /**
      * Get the URI segments count.
+     *
      * @return int The URI segments count.
      */
     public function getTotalSegments(): int
@@ -244,6 +271,7 @@ class Uri
 
     /**
      * Get the URI string.
+     *
      * @return string The URI.
      */
     public function getUri(): string
@@ -284,6 +312,7 @@ class Uri
 
     /**
      * Get the user info string.
+     *
      * @return string The user info.
      */
     public function getUserInfo(): string
@@ -299,6 +328,7 @@ class Uri
 
     /**
      * Filter query parameters.
+     *
      * @param array $keys The query parameters to keep.
      * @return Uri A new Uri.
      */
@@ -315,6 +345,7 @@ class Uri
 
     /**
      * Resolve a relative URI.
+     *
      * @param string $uri The URI string.
      * @return Uri A new Uri.
      */
@@ -327,8 +358,10 @@ class Uri
 
     /**
      * Set the URI authority string.
+     *
      * @param string $authority The authority string.
      * @return Uri A new Uri.
+     *
      * @throws InvalidArgumentException if the authority is not valid.
      */
     public function setAuthority(string $authority): static
@@ -359,6 +392,7 @@ class Uri
 
     /**
      * Set the URI fragment.
+     *
      * @param string $fragment The URI fragment.
      * @return Uri A new Uri.
      */
@@ -373,6 +407,7 @@ class Uri
 
     /**
      * Set the URI host.
+     *
      * @param string $host The URI host.
      * @return Uri A new Uri.
      */
@@ -387,6 +422,7 @@ class Uri
 
     /**
      * Set the URI path.
+     *
      * @param string $path The URI path.
      * @return Uri A new Uri.
      */
@@ -402,6 +438,7 @@ class Uri
 
     /**
      * Set the URI port.
+     *
      * @param int|null $port The URI port.
      * @return Uri A new Uri.
      */
@@ -416,6 +453,7 @@ class Uri
 
     /**
      * Set the query array.
+     *
      * @param array $query The query array.
      * @return Uri A new Uri.
      */
@@ -428,6 +466,7 @@ class Uri
 
     /**
      * Set the URI query string.
+     *
      * @param string $query The URI query string.
      * @return Uri A new Uri.
      */
@@ -444,6 +483,7 @@ class Uri
 
     /**
      * Set the URI scheme.
+     *
      * @param string $scheme The URI scheme.
      * @return Uri A new Uri.
      */
@@ -458,6 +498,7 @@ class Uri
 
     /**
      * Set the user info.
+     *
      * @param string $user The user.
      * @param string $password The password.
      * @return Uri A new Uri.
@@ -473,103 +514,11 @@ class Uri
     }
 
     /**
-     * Filter the fragment.
-     * @param string $fragment The fragment.
-     * @return string The filtered fragment.
-     */
-    protected static function filterFragment(string $fragment): string
-    {
-        return static::trim($fragment, '#');
-    }
-
-    /**
-     * Filter the path, and remove dot segments.
-     * @param string $path The path.
-     * @return string The filtered path.
-     */
-    protected static function filterPath(string $path): string
-    {
-        if ($path === '' || $path === '/') {
-            return $path;
-        }
-
-        $newSegments = [];
-
-        $segments = explode('/', $path);
-
-        foreach ($segments as $segment) {
-            if ($segment === '' || $segment === '.') {
-                continue;
-            }
-
-            if ($segment === '..') {
-                array_pop($newSegments);
-            } else {
-                $newSegments[] = rawurldecode($segment);
-            }
-        }
-
-        $newPath = implode('/', $newSegments);
-        $newPath = trim($newPath, '/ ');
-
-        if (str_starts_with($path, '/')) {
-            $newPath = '/'.$newPath;
-        }
-
-        if (substr($path, -1, 1) === '/') {
-            $newPath = rtrim($newPath).'/';
-        }
-
-        return $newPath;
-    }
-
-    /**
-     * Filter the port.
-     * @param string|int|null $port The port.
-     * @return int|null The filtered port.
-     * @throws InvalidArgumentException if the port is not valid.
-     */
-    protected static function filterPort(int|string|null $port): int|null
-    {
-        if ($port === null) {
-            return null;
-        }
-
-        if ($port <= 0 || $port > 65535) {
-            throw new InvalidArgumentException('Invalid Port: '.$port);
-        }
-
-        return (int) $port;
-    }
-
-    /**
-     * Filter the scheme.
-     * @param string $scheme The scheme.
-     * @return string The filtered scheme.
-     */
-    protected static function filterScheme(string $scheme): string
-    {
-        $scheme = strtolower($scheme);
-
-        return static::trim($scheme, ':/');
-    }
-
-    /**
-     * Filter the path segments.
-     * @param string $path The path.
-     * @return array The segments.
-     */
-    protected static function filterSegments(string $path): array
-    {
-        $path = static::trim($path, '/');
-
-        return explode('/', $path);
-    }
-
-    /**
      * Set the URI string.
+     *
      * @param string $uri The URI string.
      * @return Uri The Uri.
+     *
      * @throws InvalidArgumentException if the URI is not valid.
      */
     protected function parseUri(string $uri = ''): static
@@ -639,7 +588,108 @@ class Uri
     }
 
     /**
+     * Filter the fragment.
+     *
+     * @param string $fragment The fragment.
+     * @return string The filtered fragment.
+     */
+    protected static function filterFragment(string $fragment): string
+    {
+        return static::trim($fragment, '#');
+    }
+
+    /**
+     * Filter the path, and remove dot segments.
+     *
+     * @param string $path The path.
+     * @return string The filtered path.
+     */
+    protected static function filterPath(string $path): string
+    {
+        if ($path === '' || $path === '/') {
+            return $path;
+        }
+
+        $newSegments = [];
+
+        $segments = explode('/', $path);
+
+        foreach ($segments as $segment) {
+            if ($segment === '' || $segment === '.') {
+                continue;
+            }
+
+            if ($segment === '..') {
+                array_pop($newSegments);
+            } else {
+                $newSegments[] = rawurldecode($segment);
+            }
+        }
+
+        $newPath = implode('/', $newSegments);
+        $newPath = trim($newPath, '/ ');
+
+        if (str_starts_with($path, '/')) {
+            $newPath = '/'.$newPath;
+        }
+
+        if (substr($path, -1, 1) === '/') {
+            $newPath = rtrim($newPath).'/';
+        }
+
+        return $newPath;
+    }
+
+    /**
+     * Filter the port.
+     *
+     * @param string|int|null $port The port.
+     * @return int|null The filtered port.
+     *
+     * @throws InvalidArgumentException if the port is not valid.
+     */
+    protected static function filterPort(int|string|null $port): int|null
+    {
+        if ($port === null) {
+            return null;
+        }
+
+        if ($port <= 0 || $port > 65535) {
+            throw new InvalidArgumentException('Invalid Port: '.$port);
+        }
+
+        return (int) $port;
+    }
+
+    /**
+     * Filter the scheme.
+     *
+     * @param string $scheme The scheme.
+     * @return string The filtered scheme.
+     */
+    protected static function filterScheme(string $scheme): string
+    {
+        $scheme = strtolower($scheme);
+
+        return static::trim($scheme, ':/');
+    }
+
+    /**
+     * Filter the path segments.
+     *
+     * @param string $path The path.
+     * @return array The segments.
+     */
+    protected static function filterSegments(string $path): array
+    {
+        $path = static::trim($path, '/');
+
+        return explode('/', $path);
+    }
+
+    /**
      * Trim a string.
+     *
      * @param string $string The input string.
      * @param string $extraChars Extra characters to trim.
      * @return string The trimmed string.
