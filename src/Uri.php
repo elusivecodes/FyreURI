@@ -643,7 +643,7 @@ class Uri
     /**
      * Filter the port.
      *
-     * @param string|int|null $port The port.
+     * @param int|string|null $port The port.
      * @return int|null The filtered port.
      *
      * @throws InvalidArgumentException if the port is not valid.
