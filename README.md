@@ -6,7 +6,7 @@
 ## Table Of Contents
 - [Installation](#installation)
 - [Uri Creation](#uri-creation)
-- [Methods](#methods)
+- [Uri Methods](#uri-methods)
 
 
 
@@ -39,7 +39,7 @@ $uri = Uri::fromString($uriString);
 ```
 
 
-## Methods
+## Uri Methods
 
 **Add Query**
 
