@@ -5,8 +5,8 @@
 
 ## Table Of Contents
 - [Installation](#installation)
-- [Uri Creation](#uri-creation)
-- [Uri Methods](#uri-methods)
+- [Basic Usage](#basic-usage)
+- [Methods](#methods)
 
 
 
@@ -24,7 +24,7 @@ In PHP:
 use Fyre\Http\Uri;
 ```
 
-## Uri Creation
+## Basic Usage
 
 - `$uriString` is a string representing the uri.
 
@@ -39,7 +39,7 @@ $uri = Uri::fromString($uriString);
 ```
 
 
-## Uri Methods
+## Methods
 
 **Add Query**
 
