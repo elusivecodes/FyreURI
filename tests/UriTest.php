@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace Tests;
 
 use Fyre\Http\Uri;
+use Fyre\Utility\Traits\MacroTrait;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+
+use function class_uses;
 
 final class UriTest extends TestCase
 {
@@ -13,6 +16,14 @@ final class UriTest extends TestCase
     use UriAttributesSetTestTrait;
     use UriQueryTestTrait;
     use UriRelativeTestTrait;
+
+    public function testMacroable(): void
+    {
+        $this->assertContains(
+            MacroTrait::class,
+            class_uses(Uri::class)
+        );
+    }
 
     public function testUri(): void
     {

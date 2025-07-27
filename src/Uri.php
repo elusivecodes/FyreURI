@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Fyre\Http;
 
+use Fyre\Utility\Traits\MacroTrait;
 use InvalidArgumentException;
 
 use function array_filter;
@@ -33,6 +34,8 @@ use const ARRAY_FILTER_USE_KEY;
  */
 class Uri
 {
+    use MacroTrait;
+
     protected const DEFAULT_PORTS = [
         'ftp' => 21,
         'sftp' => 22,
