@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Fyre\Http\Exceptions\UriException;
 use Fyre\Http\Uri;
 use Fyre\Utility\Traits\MacroTrait;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 use function class_uses;
@@ -29,22 +29,62 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             'https://domain.com/',
-            Uri::fromString('https://domain.com/')->getUri()
+            Uri::createFromString('https://domain.com/')->getUri()
+        );
+    }
+
+    public function testUriFragment(): void
+    {
+        $this->assertEquals(
+            'https://domain.com/#test',
+            Uri::createFromString('https://domain.com/#test')->getUri()
         );
     }
 
     public function testUriInvalid(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(UriException::class);
 
-        Uri::fromString('https:///domain.com/');
+        Uri::createFromString('https:///domain.com/');
     }
 
-    public function testUriWithFragment(): void
+    public function testUriPassword(): void
     {
         $this->assertEquals(
-            'https://domain.com/#test',
-            Uri::fromString('https://domain.com/#test')->getUri()
+            'https://user:password@domain.com/',
+            Uri::createFromString('https://user:password@domain.com/')->getUri()
+        );
+    }
+
+    public function testUriPath(): void
+    {
+        $this->assertEquals(
+            'https://domain.com/path/deep',
+            Uri::createFromString('https://domain.com/path/deep')->getUri()
+        );
+    }
+
+    public function testUriPort(): void
+    {
+        $this->assertEquals(
+            'https://domain.com:3000/',
+            Uri::createFromString('https://domain.com:3000/')->getUri()
+        );
+    }
+
+    public function testUriQuery(): void
+    {
+        $this->assertEquals(
+            'https://domain.com/?test=1',
+            Uri::createFromString('https://domain.com/?test=1')->getUri()
+        );
+    }
+
+    public function testUriUsername(): void
+    {
+        $this->assertEquals(
+            'https://user@domain.com/',
+            Uri::createFromString('https://user@domain.com/')->getUri()
         );
     }
 
@@ -52,39 +92,7 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             '/path/deep',
-            Uri::fromString('/path/deep')->getUri()
-        );
-    }
-
-    public function testUriWithPassword(): void
-    {
-        $this->assertEquals(
-            'https://user:password@domain.com/',
-            Uri::fromString('https://user:password@domain.com/')->getUri()
-        );
-    }
-
-    public function testUriWithPath(): void
-    {
-        $this->assertEquals(
-            'https://domain.com/path/deep',
-            Uri::fromString('https://domain.com/path/deep')->getUri()
-        );
-    }
-
-    public function testUriWithPort(): void
-    {
-        $this->assertEquals(
-            'https://domain.com:3000/',
-            Uri::fromString('https://domain.com:3000/')->getUri()
-        );
-    }
-
-    public function testUriWithQuery(): void
-    {
-        $this->assertEquals(
-            'https://domain.com/?test=1',
-            Uri::fromString('https://domain.com/?test=1')->getUri()
+            Uri::createFromString('/path/deep')->getUri()
         );
     }
 
@@ -92,15 +100,7 @@ final class UriTest extends TestCase
     {
         $this->assertEquals(
             '/path/deep/',
-            Uri::fromString('/path/deep/')->getUri()
-        );
-    }
-
-    public function testUriWithUsername(): void
-    {
-        $this->assertEquals(
-            'https://user@domain.com/',
-            Uri::fromString('https://user@domain.com/')->getUri()
+            Uri::createFromString('/path/deep/')->getUri()
         );
     }
 }

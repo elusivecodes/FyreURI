@@ -32,35 +32,14 @@ use Fyre\Http\Uri;
 $uri = new Uri($uriString);
 ```
 
-Alternatively, you can use the `fromString` method for easier chaining.
+Alternatively, you can use the `createFromString` method for easier chaining.
 
 ```php
-$uri = Uri::fromString($uriString);
+$uri = Uri::createFromString($uriString);
 ```
 
 
 ## Methods
-
-**Add Query**
-
-Add a query parameter.
-
-- `$key` is a string representing the query key.
-- `$value` is the query value.
-
-```php
-$newUri = $uri->addQuery($key, $value);
-```
-
-**Except Query**
-
-Remove query parameters.
-
-- `$keys` is an array containing the query parameters to remove.
-
-```php
-$newUri = $uri->exceptQuery($keys);
-```
 
 **Get Authority**
 
@@ -104,18 +83,18 @@ $port = $uri->getPort();
 
 **Get Query**
 
-Get the URI query array.
+Get the URI query string.
 
 ```php
 $query = $uri->getQuery();
 ```
 
-**Get Query String**
+**Get Query Params**
 
-Get the URI query string.
+Get the URI query params.
 
 ```php
-$query = $uri->getQueryString();
+$params = $uri->getQueryParams();
 ```
 
 **Get Scheme**
@@ -168,103 +147,134 @@ Get the user info string.
 $userInfo = $uri->getUserInfo();
 ```
 
-**Only Query**
+**Resolve Relative Uri**
 
-Filter query parameters.
+Clone the *Uri* with a resolved relative URI.
 
-- `$keys` is an array containing the query parameters to keep.
+- `$relativeUri` is a string representing the relative uri.
 
 ```php
-$newUri = $uri->onlyQuery($keys);
+$newUri = $uri->resolveRelativeUri($relativeUri);
 ```
 
-**Set Authority**
+**With Added Query**
 
-Set the URI authority string.
+Clone the *Uri* with a new query parameter.
+
+- `$key` is a string representing the query key.
+- `$value` is the query value.
+
+```php
+$newUri = $uri->withAddedQuery($key, $value);
+```
+
+**With Authority**
+
+Clone the *Uri* with a new authority.
 
 - `$authority` is a string representing the authority.
 
 ```php
-$newUri = $uri->setAuthority($authority);
+$newUri = $uri->withAuthority($authority);
 ```
 
-**Set Fragment**
+**With Fragment**
 
-Set the URI fragment.
+Clone the *Uri* with a new fragment.
 
 - `$fragment` is a string representing the fragment.
 
 ```php
-$newUri = $uri->setFragment($fragment);
+$newUri = $uri->withFragment($fragment);
 ```
 
-**Set Host**
+**With Host**
 
-Set the URI host.
+Clone the *Uri* with a new host.
 
 - `$host` is a string representing the host.
 
 ```php
-$newUri = $uri->setHost($host);
+$newUri = $uri->withHost($host);
 ```
 
-**Set Path**
+**With Only Query**
 
-Set the URI path.
+Clone the *Uri* with only specific query parameters.
+
+- `$keys` is an array containing the query parameters to keep.
+
+```php
+$newUri = $uri->withOnlyQuery($keys);
+```
+
+**Without Query**
+
+Clone the *Uri* without query parameters.
+
+- `$keys` is an array containing the query parameters to remove.
+
+```php
+$newUri = $uri->withoutQuery($keys);
+```
+
+**With Path**
+
+Clone the *Uri* with a new path.
 
 - `$path` is a string representing the path.
 
 ```php
-$newUri = $uri->setPath($path);
+$newUri = $uri->withPath($path);
 ```
 
-**Set Port**
+**With Port**
 
-Get the URI port.
+Clone the *Uri* with a new port.
 
 - `$port` is a number representing the port.
 
 ```php
-$newUri = $uri->setPort($port);
+$newUri = $uri->withPort($port);
 ```
 
-**Set Query**
+**With Query**
 
-Get the URI query array.
-
-- `$query` is an array containing the query parameters.
-
-```php
-$newUri = $uri->setQuery($query);
-```
-
-**Set Query String**
-
-Get the URI query string.
+Clone the *Uri* with a new query string.
 
 - `$query` is a string representing the query parameters.
 
 ```php
-$newUri = $uri->setQueryString($query);
+$newUri = $uri->withQuery($query);
 ```
 
-**Set Scheme**
+**With Query Params**
 
-Get the URI scheme.
+Clone the *Uri* with new query parameters.
+
+- `$params` is an array containing the query parameters.
+
+```php
+$newUri = $uri->withQueryParams($params);
+```
+
+**With Scheme**
+
+Clone the *Uri* with a new scheme.
 
 - `$scheme` is a string representing the scheme.
 
 ```php
-$newUri = $uri->setScheme($scheme);
+$newUri = $uri->withScheme($scheme);
 ```
 
-**Set User Info**
+**With User Info**
 
-Get the user info string.
+Clone the *Uri* with new user info.
 
 - `$username` is a string representing the username.
 - `$password` is a string representing the password, and will default to *""*.
 
 ```php
-$newUri = $uri->setUserInfo($username, $password);
+$newUri = $uri->withUserInfo($username, $password);
 ```

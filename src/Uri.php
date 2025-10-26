@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Fyre\Http;
 
+use Fyre\Http\Exceptions\UriException;
 use Fyre\Utility\Traits\MacroTrait;
-use InvalidArgumentException;
+use Psr\Http\Message\UriInterface;
+use Stringable;
 
 use function array_filter;
 use function array_key_exists;
@@ -15,6 +17,7 @@ use function explode;
 use function http_build_query;
 use function implode;
 use function in_array;
+use function is_numeric;
 use function ltrim;
 use function parse_str;
 use function parse_url;
@@ -32,7 +35,7 @@ use const ARRAY_FILTER_USE_KEY;
 /**
  * Uri
  */
-class Uri
+class Uri implements Stringable, UriInterface
 {
     use MacroTrait;
 
@@ -42,8 +45,6 @@ class Uri
         'http' => 80,
         'https' => 443,
     ];
-
-    protected const WHITESPACE = " \n\r\t\v\x00";
 
     protected string $fragment = '';
 
@@ -55,9 +56,9 @@ class Uri
 
     protected int|null $port = null;
 
-    protected array $query = [];
+    protected string|null $query = null;
 
-    protected string|null $queryString = null;
+    protected array $queryParams = [];
 
     protected string $scheme = '';
 
@@ -75,7 +76,7 @@ class Uri
      * @param string $uri The URI string.
      * @return Uri A new Uri.
      */
-    public static function fromString(string $uri = ''): static
+    public static function createFromString(string $uri = ''): static
     {
         return new static($uri);
     }
@@ -87,7 +88,7 @@ class Uri
      */
     public function __construct(string $uri = '')
     {
-        $this->parseUri($uri);
+        $this->setUri($uri);
     }
 
     /**
@@ -95,7 +96,7 @@ class Uri
      */
     public function __clone(): void
     {
-        $this->queryString = null;
+        $this->query = null;
         $this->uriString = null;
     }
 
@@ -107,39 +108,6 @@ class Uri
     public function __toString(): string
     {
         return $this->getUri();
-    }
-
-    /**
-     * Add a query parameter.
-     *
-     * @param string $key The key.
-     * @param mixed $value The value.
-     * @return Uri A new Uri.
-     */
-    public function addQuery(string $key, mixed $value = null): static
-    {
-        $query = $this->query;
-
-        $query[$key] = $value;
-
-        return $this->setQuery($query);
-    }
-
-    /**
-     * Remove query parameters.
-     *
-     * @param array $keys The query parameters to remove.
-     * @return Uri A new Uri.
-     */
-    public function exceptQuery(array $keys): static
-    {
-        $query = array_filter(
-            $this->query,
-            fn(mixed $key): bool => !in_array($key, $keys),
-            ARRAY_FILTER_USE_KEY
-        );
-
-        return $this->setQuery($query);
     }
 
     /**
@@ -212,23 +180,23 @@ class Uri
     }
 
     /**
-     * Get the URI query array.
-     *
-     * @return array The URI query array.
-     */
-    public function getQuery(): array
-    {
-        return $this->query;
-    }
-
-    /**
      * Get the URI query string.
      *
      * @return string The URI query string.
      */
-    public function getQueryString(): string
+    public function getQuery(): string
     {
-        return $this->queryString ??= http_build_query($this->query);
+        return $this->query ??= http_build_query($this->queryParams);
+    }
+
+    /**
+     * Get the URI query array.
+     *
+     * @return array The URI query array.
+     */
+    public function getQueryParams(): array
+    {
+        return $this->queryParams;
     }
 
     /**
@@ -302,8 +270,8 @@ class Uri
             $uri .= $path;
         }
 
-        if ($this->query !== []) {
-            $uri .= '?'.$this->getQueryString();
+        if ($this->queryParams !== []) {
+            $uri .= '?'.$this->getQuery();
         }
 
         if ($this->fragment) {
@@ -330,24 +298,7 @@ class Uri
     }
 
     /**
-     * Filter query parameters.
-     *
-     * @param array $keys The query parameters to keep.
-     * @return Uri A new Uri.
-     */
-    public function onlyQuery(array $keys): static
-    {
-        $query = array_filter(
-            $this->query,
-            fn(mixed $key): bool => in_array($key, $keys),
-            ARRAY_FILTER_USE_KEY
-        );
-
-        return $this->setQuery($query);
-    }
-
-    /**
-     * Resolve a relative URI.
+     * Clone the Uri with a resolved relative URI.
      *
      * @param string $uri The URI string.
      * @return Uri A new Uri.
@@ -356,18 +307,34 @@ class Uri
     {
         $temp = clone $this;
 
-        return $temp->parseUri($uri);
+        return $temp->setUri($uri);
     }
 
     /**
-     * Set the URI authority string.
+     * Clone the Uri with a new query parameter.
+     *
+     * @param string $key The key.
+     * @param mixed $value The value.
+     * @return Uri A new Uri.
+     */
+    public function withAddedQuery(string $key, mixed $value = null): static
+    {
+        $queryParams = $this->queryParams;
+
+        $queryParams[$key] = $value;
+
+        return $this->withQueryParams($queryParams);
+    }
+
+    /**
+     * Clone the Uri with a new authority.
      *
      * @param string $authority The authority string.
      * @return Uri A new Uri.
      *
-     * @throws InvalidArgumentException if the authority is not valid.
+     * @throws UriException if the authority is not valid.
      */
-    public function setAuthority(string $authority): static
+    public function withAuthority(string $authority): static
     {
         if ($authority && strpos($authority, '://') === false) {
             $authority = '//'.ltrim($authority, '/');
@@ -376,7 +343,7 @@ class Uri
         $parts = parse_url($authority);
 
         if (!$parts || !array_key_exists('host', $parts)) {
-            throw new InvalidArgumentException('Invalid authority: '.$authority);
+            throw UriException::forInvalidAuthority($authority);
         }
 
         $temp = clone $this;
@@ -387,19 +354,19 @@ class Uri
         $temp->scheme = static::filterScheme($parts['scheme'] ?? '');
         $temp->user = static::trim($user);
         $temp->password = static::trim($password);
-        $temp->host = static::trim($parts['host']);
+        $temp->host = static::filterHost($parts['host']);
         $temp->port = static::filterPort($parts['port'] ?? null);
 
         return $temp;
     }
 
     /**
-     * Set the URI fragment.
+     * Clone the Uri with a new fragment.
      *
      * @param string $fragment The URI fragment.
      * @return Uri A new Uri.
      */
-    public function setFragment(string $fragment = ''): static
+    public function withFragment(string $fragment = ''): static
     {
         $temp = clone $this;
 
@@ -409,27 +376,61 @@ class Uri
     }
 
     /**
-     * Set the URI host.
+     * Clone the Uri with a new host.
      *
      * @param string $host The URI host.
      * @return Uri A new Uri.
      */
-    public function setHost(string $host = ''): static
+    public function withHost(string $host = ''): static
     {
         $temp = clone $this;
 
-        $temp->host = static::trim($host);
+        $temp->host = static::filterHost($host);
 
         return $temp;
     }
 
     /**
-     * Set the URI path.
+     * Clone the Uri with only specific query parameters.
+     *
+     * @param array $keys The query parameters to keep.
+     * @return Uri A new Uri.
+     */
+    public function withOnlyQuery(array $keys): static
+    {
+        $params = array_filter(
+            $this->queryParams,
+            fn(mixed $key): bool => in_array($key, $keys),
+            ARRAY_FILTER_USE_KEY
+        );
+
+        return $this->withQueryParams($params);
+    }
+
+    /**
+     * Clone the Uri without query parameters.
+     *
+     * @param array $keys The query parameters to remove.
+     * @return Uri A new Uri.
+     */
+    public function withoutQuery(array $keys): static
+    {
+        $params = array_filter(
+            $this->queryParams,
+            fn(mixed $key): bool => !in_array($key, $keys),
+            ARRAY_FILTER_USE_KEY
+        );
+
+        return $this->withQueryParams($params);
+    }
+
+    /**
+     * Clone the Uri with a new path.
      *
      * @param string $path The URI path.
      * @return Uri A new Uri.
      */
-    public function setPath(string $path): static
+    public function withPath(string $path): static
     {
         $temp = clone $this;
 
@@ -440,12 +441,12 @@ class Uri
     }
 
     /**
-     * Set the URI port.
+     * Clone the Uri with a new port.
      *
      * @param int|null $port The URI port.
      * @return Uri A new Uri.
      */
-    public function setPort(int|null $port = null): static
+    public function withPort(int|null $port = null): static
     {
         $temp = clone $this;
 
@@ -455,42 +456,42 @@ class Uri
     }
 
     /**
-     * Set the query array.
-     *
-     * @param array $query The query array.
-     * @return Uri A new Uri.
-     */
-    public function setQuery(array $query): static
-    {
-        $query = http_build_query($query);
-
-        return $this->setQueryString($query);
-    }
-
-    /**
-     * Set the URI query string.
+     * Clone the Uri with a new query string.
      *
      * @param string $query The URI query string.
      * @return Uri A new Uri.
      */
-    public function setQueryString(string $query): static
+    public function withQuery(string $query): static
     {
         $temp = clone $this;
 
         $query = static::trim($query, '?');
 
-        parse_str($query, $temp->query);
+        parse_str($query, $temp->queryParams);
 
         return $temp;
     }
 
     /**
-     * Set the URI scheme.
+     * Clone the Uri with new query parameters.
+     *
+     * @param array $query The query array.
+     * @return Uri A new Uri.
+     */
+    public function withQueryParams(array $query): static
+    {
+        $query = http_build_query($query);
+
+        return $this->withQuery($query);
+    }
+
+    /**
+     * Clone the Uri with a new scheme.
      *
      * @param string $scheme The URI scheme.
      * @return Uri A new Uri.
      */
-    public function setScheme(string $scheme): static
+    public function withScheme(string $scheme): static
     {
         $temp = clone $this;
 
@@ -500,18 +501,18 @@ class Uri
     }
 
     /**
-     * Set the user info.
+     * Clone the Uri with new user info.
      *
      * @param string $user The user.
      * @param string $password The password.
      * @return Uri A new Uri.
      */
-    public function setUserInfo(string $user, string $password = ''): static
+    public function withUserInfo(string $user, string|null $password = null): static
     {
         $temp = clone $this;
 
         $temp->user = static::trim($user);
-        $temp->password = static::trim($password);
+        $temp->password = static::trim($password ?? '');
 
         return $temp;
     }
@@ -522,14 +523,14 @@ class Uri
      * @param string $uri The URI string.
      * @return Uri The Uri.
      *
-     * @throws InvalidArgumentException if the URI is not valid.
+     * @throws UriException if the URI is not valid.
      */
-    protected function parseUri(string $uri = ''): static
+    protected function setUri(string $uri = ''): static
     {
         $parts = parse_url($uri);
 
         if (!$parts) {
-            throw new InvalidArgumentException('Invalid URI: '.$uri);
+            throw UriException::forInvalidUri($uri);
         }
 
         if (array_key_exists('host', $parts)) {
@@ -542,7 +543,7 @@ class Uri
         }
 
         if (array_key_exists('host', $parts) || array_key_exists('path', $parts)) {
-            $this->query = [];
+            $this->queryParams = [];
             $this->fragment = '';
         }
 
@@ -559,7 +560,7 @@ class Uri
         }
 
         if (array_key_exists('host', $parts)) {
-            $this->host = static::trim($parts['host']);
+            $this->host = static::filterHost($parts['host']);
         }
 
         if (array_key_exists('port', $parts)) {
@@ -578,7 +579,7 @@ class Uri
         }
 
         if (array_key_exists('query', $parts)) {
-            parse_str($parts['query'], $this->query);
+            parse_str($parts['query'], $this->queryParams);
         }
 
         if (array_key_exists('fragment', $parts)) {
@@ -599,6 +600,30 @@ class Uri
     protected static function filterFragment(string $fragment): string
     {
         return static::trim($fragment, '#');
+    }
+
+    /**
+     * Filter the host.
+     * 
+     * @param string $host The host.
+     * @return string The filtered host.
+     *
+     * @throws UriException if the host is not valid.
+     */
+    protected static function filterHost(string $host): string
+    {
+        $host = static::trim($host);
+
+        if ($host === '') {
+            return $host;
+        }
+
+        if (!preg_match('/^(?:[a-z0-9.-]+|\[[a-f0-9:]+\])$/iu', $host)) {
+            throw UriException::forInvalidHost($host);
+        }
+
+        return $host;
+
     }
 
     /**
@@ -649,7 +674,7 @@ class Uri
      * @param int|string|null $port The port.
      * @return int|null The filtered port.
      *
-     * @throws InvalidArgumentException if the port is not valid.
+     * @throws UriException if the port is not valid.
      */
     protected static function filterPort(int|string|null $port): int|null
     {
@@ -657,8 +682,8 @@ class Uri
             return null;
         }
 
-        if ($port <= 0 || $port > 65535) {
-            throw new InvalidArgumentException('Invalid Port: '.$port);
+        if (!is_numeric($port) || $port <= 0 || $port > 65535) {
+            throw UriException::forInvalidPort((string) $port);
         }
 
         return (int) $port;
@@ -669,12 +694,19 @@ class Uri
      *
      * @param string $scheme The scheme.
      * @return string The filtered scheme.
+     *
+     * @throws UriException if the scheme is not valid.
      */
     protected static function filterScheme(string $scheme): string
     {
         $scheme = strtolower($scheme);
+        $scheme = static::trim($scheme, ':/');
 
-        return static::trim($scheme, ':/');
+        if ($scheme && !array_key_exists($scheme, static::DEFAULT_PORTS)) {
+            throw UriException::forInvalidScheme($scheme);
+        }
+
+        return $scheme;
     }
 
     /**
@@ -699,6 +731,6 @@ class Uri
      */
     protected static function trim(string $string, string $extraChars = ''): string
     {
-        return trim($string, static::WHITESPACE.$extraChars);
+        return trim($string, " \n\r\t\v\x00".$extraChars);
     }
 }

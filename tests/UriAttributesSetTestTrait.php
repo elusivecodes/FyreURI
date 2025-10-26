@@ -3,19 +3,19 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Fyre\Http\Exceptions\UriException;
 use Fyre\Http\Uri;
-use InvalidArgumentException;
 
 trait UriAttributesSetTestTrait
 {
-    public function testSetAuthority(): void
+    public function testWithAuthority(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setAuthority('test.com');
+        $uri2 = $uri1->withAuthority('test.com');
 
-        $this->assertSame(
-            '',
-            $uri1->getAuthority()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -24,14 +24,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetAuthorityWithPort(): void
+    public function testWithAuthorityPort(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setAuthority('test.com:3000');
+        $uri2 = $uri1->withAuthority('test.com:3000');
 
-        $this->assertSame(
-            '',
-            $uri1->getAuthority()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -40,14 +40,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetAuthorityWithUserInfo(): void
+    public function testWithAuthorityUserInfo(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setAuthority('user:password@test.com');
+        $uri2 = $uri1->withAuthority('user:password@test.com');
 
-        $this->assertSame(
-            '',
-            $uri1->getAuthority()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -56,14 +56,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetFragment(): void
+    public function testWithFragment(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setFragment('test');
+        $uri2 = $uri1->withFragment('test');
 
-        $this->assertSame(
-            '',
-            $uri1->getFragment()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -72,14 +72,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetFragmentWithHash(): void
+    public function testWithFragmentHash(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setFragment('#test');
+        $uri2 = $uri1->withFragment('#test');
 
-        $this->assertSame(
-            '',
-            $uri1->getFragment()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -88,14 +88,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetHost(): void
+    public function testWithHost(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setHost('test.com');
+        $uri2 = $uri1->withHost('test.com');
 
-        $this->assertSame(
-            '',
-            $uri1->getHost()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -104,14 +104,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetPath(): void
+    public function testWithPath(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setPath('test/deep');
+        $uri2 = $uri1->withPath('test/deep');
 
-        $this->assertSame(
-            '',
-            $uri1->getPath()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -120,14 +120,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetPathWithDots(): void
+    public function testWithPathWithDots(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setPath('test/../deep');
+        $uri2 = $uri1->withPath('test/../deep');
 
-        $this->assertSame(
-            '',
-            $uri1->getPath()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -136,14 +136,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetPathWithLeadingSlash(): void
+    public function testWithPathWithLeadingSlash(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setPath('/test/deep');
+        $uri2 = $uri1->withPath('/test/deep');
 
-        $this->assertSame(
-            '',
-            $uri1->getPath()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -152,13 +152,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetPort(): void
+    public function testWithPort(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setPort(3000);
+        $uri2 = $uri1->withPort(3000);
 
-        $this->assertNull(
-            $uri1->getPort()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -167,78 +168,74 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetPortInvalid(): void
+    public function testWithPortInvalid(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(UriException::class);
 
         $uri1 = new Uri();
-        $uri2 = $uri1->setPort(0);
+        $uri1->withPort(0);
     }
 
-    public function testSetQuery(): void
+    public function testWithQuery(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setQuery([
+        $uri2 = $uri1->withQuery('test=a');
+
+        $this->assertNotSame(
+            $uri1,
+            $uri2
+        );
+
+        $this->assertSame(
+            'test=a',
+            $uri2->getQuery()
+        );
+    }
+
+    public function testWithQueryParams(): void
+    {
+        $uri1 = new Uri();
+        $uri2 = $uri1->withQueryParams([
             'test' => 'a',
         ]);
 
-        $this->assertSame(
-            [],
-            $uri1->getQuery()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
             [
                 'test' => 'a',
             ],
+            $uri2->getQueryParams()
+        );
+    }
+
+    public function testWithQueryWithQuestionMark(): void
+    {
+        $uri1 = new Uri();
+        $uri2 = $uri1->withQuery('?test=a');
+
+        $this->assertNotSame(
+            $uri1,
+            $uri2
+        );
+
+        $this->assertSame(
+            'test=a',
             $uri2->getQuery()
         );
     }
 
-    public function testSetQueryString(): void
+    public function testWithScheme(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setQueryString('test=a');
+        $uri2 = $uri1->withScheme('https');
 
-        $this->assertSame(
-            [],
-            $uri1->getQuery()
-        );
-
-        $this->assertSame(
-            [
-                'test' => 'a',
-            ],
-            $uri2->getQuery()
-        );
-    }
-
-    public function testSetQueryStringWithQuestionMark(): void
-    {
-        $uri1 = new Uri();
-        $uri2 = $uri1->setQueryString('?test=a');
-
-        $this->assertSame(
-            [],
-            $uri1->getQuery()
-        );
-
-        $this->assertSame(
-            [
-                'test' => 'a',
-            ],
-            $uri2->getQuery()
-        );
-    }
-
-    public function testSetScheme(): void
-    {
-        $uri1 = new Uri();
-        $uri2 = $uri1->setScheme('https');
-
-        $this->assertSame(
-            '',
-            $uri1->getScheme()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -247,14 +244,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetUserInfo(): void
+    public function testWithUserInfo(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setUserInfo('test');
+        $uri2 = $uri1->withUserInfo('test');
 
-        $this->assertSame(
-            '',
-            $uri1->getUserInfo()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
@@ -263,14 +260,14 @@ trait UriAttributesSetTestTrait
         );
     }
 
-    public function testSetUserInfoWithPassword(): void
+    public function testWithUserInfoWithPassword(): void
     {
         $uri1 = new Uri();
-        $uri2 = $uri1->setUserInfo('test', 'pass');
+        $uri2 = $uri1->withUserInfo('test', 'pass');
 
-        $this->assertSame(
-            '',
-            $uri1->getUserInfo()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(

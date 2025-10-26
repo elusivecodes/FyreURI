@@ -7,70 +7,50 @@ use Fyre\Http\Uri;
 
 trait UriQueryTestTrait
 {
-    public function testAddQuery(): void
+    public function testWithAddedQuery(): void
     {
-        $uri1 = Uri::fromString('/?param1=a&param2=b');
-        $uri2 = $uri1->addQuery('param3', 'c');
+        $uri1 = Uri::createFromString('/?param1=a&param2=b');
+        $uri2 = $uri1->withAddedQuery('param3', 'c');
 
-        $this->assertSame(
-            [
-                'param1' => 'a',
-                'param2' => 'b',
-            ],
-            $uri1->getQuery()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
-            [
-                'param1' => 'a',
-                'param2' => 'b',
-                'param3' => 'c',
-            ],
+            'param1=a&param2=b&param3=c',
             $uri2->getQuery()
         );
     }
 
-    public function testExceptQuery(): void
+    public function testWithOnlyQuery(): void
     {
-        $uri1 = Uri::fromString('/?param1=a&param2=b&param3=c');
-        $uri2 = $uri1->exceptQuery(['param1']);
+        $uri1 = Uri::createFromString('/?param1=a&param2=b&param3=c');
+        $uri2 = $uri1->withOnlyQuery(['param1']);
 
-        $this->assertSame(
-            [
-                'param1' => 'a',
-                'param2' => 'b',
-                'param3' => 'c',
-            ],
-            $uri1->getQuery()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
-            [
-                'param2' => 'b',
-                'param3' => 'c',
-            ],
+            'param1=a',
             $uri2->getQuery()
         );
     }
 
-    public function testOnlyQuery(): void
+    public function testWithoutQuery(): void
     {
-        $uri1 = Uri::fromString('/?param1=a&param2=b&param3=c');
-        $uri2 = $uri1->onlyQuery(['param1']);
+        $uri1 = Uri::createFromString('/?param1=a&param2=b&param3=c');
+        $uri2 = $uri1->withoutQuery(['param1']);
 
-        $this->assertSame(
-            [
-                'param1' => 'a',
-                'param2' => 'b',
-                'param3' => 'c',
-            ],
-            $uri1->getQuery()
+        $this->assertNotSame(
+            $uri1,
+            $uri2
         );
 
         $this->assertSame(
-            [
-                'param1' => 'a',
-            ],
+            'param2=b&param3=c',
             $uri2->getQuery()
         );
     }
