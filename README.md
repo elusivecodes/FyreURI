@@ -273,7 +273,7 @@ $newUri = $uri->withScheme($scheme);
 Clone the *Uri* with new user info.
 
 - `$username` is a string representing the username.
-- `$password` is a string representing the password, and will default to *""*.
+- `$password` is a string representing the password, and will default to *null*.
 
 ```php
 $newUri = $uri->withUserInfo($username, $password);
