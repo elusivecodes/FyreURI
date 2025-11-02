@@ -5,6 +5,7 @@ namespace Fyre\Http;
 
 use Fyre\Http\Exceptions\UriException;
 use Fyre\Utility\Traits\MacroTrait;
+use Override;
 use Psr\Http\Message\UriInterface;
 use Stringable;
 
@@ -105,6 +106,7 @@ class Uri implements Stringable, UriInterface
      *
      * @return string The URI string.
      */
+    #[Override]
     public function __toString(): string
     {
         return $this->getUri();
@@ -115,6 +117,7 @@ class Uri implements Stringable, UriInterface
      *
      * @return string The URI authority string.
      */
+    #[Override]
     public function getAuthority(): string
     {
         if (!$this->host) {
@@ -141,6 +144,7 @@ class Uri implements Stringable, UriInterface
      *
      * @return string The URI fragment.
      */
+    #[Override]
     public function getFragment(): string
     {
         return rawurlencode($this->fragment);
@@ -151,6 +155,7 @@ class Uri implements Stringable, UriInterface
      *
      * @return string The URI host.
      */
+    #[Override]
     public function getHost(): string
     {
         return $this->host;
@@ -161,6 +166,7 @@ class Uri implements Stringable, UriInterface
      *
      * @return string The URI path.
      */
+    #[Override]
     public function getPath(): string
     {
         $segments = explode('/', $this->path);
@@ -174,6 +180,7 @@ class Uri implements Stringable, UriInterface
      *
      * @return int|null The URI port.
      */
+    #[Override]
     public function getPort(): int|null
     {
         return $this->port;
@@ -184,6 +191,7 @@ class Uri implements Stringable, UriInterface
      *
      * @return string The URI query string.
      */
+    #[Override]
     public function getQuery(): string
     {
         return $this->query ??= http_build_query($this->queryParams);
@@ -204,6 +212,7 @@ class Uri implements Stringable, UriInterface
      *
      * @return string The URI scheme.
      */
+    #[Override]
     public function getScheme(): string
     {
         return $this->scheme;
@@ -286,6 +295,7 @@ class Uri implements Stringable, UriInterface
      *
      * @return string The user info.
      */
+    #[Override]
     public function getUserInfo(): string
     {
         $info = rawurlencode($this->user);
@@ -366,6 +376,7 @@ class Uri implements Stringable, UriInterface
      * @param string $fragment The URI fragment.
      * @return Uri A new Uri.
      */
+    #[Override]
     public function withFragment(string $fragment = ''): static
     {
         $temp = clone $this;
@@ -381,6 +392,7 @@ class Uri implements Stringable, UriInterface
      * @param string $host The URI host.
      * @return Uri A new Uri.
      */
+    #[Override]
     public function withHost(string $host = ''): static
     {
         $temp = clone $this;
@@ -430,6 +442,7 @@ class Uri implements Stringable, UriInterface
      * @param string $path The URI path.
      * @return Uri A new Uri.
      */
+    #[Override]
     public function withPath(string $path): static
     {
         $temp = clone $this;
@@ -446,6 +459,7 @@ class Uri implements Stringable, UriInterface
      * @param int|null $port The URI port.
      * @return Uri A new Uri.
      */
+    #[Override]
     public function withPort(int|null $port = null): static
     {
         $temp = clone $this;
@@ -461,6 +475,7 @@ class Uri implements Stringable, UriInterface
      * @param string $query The URI query string.
      * @return Uri A new Uri.
      */
+    #[Override]
     public function withQuery(string $query): static
     {
         $temp = clone $this;
@@ -491,6 +506,7 @@ class Uri implements Stringable, UriInterface
      * @param string $scheme The URI scheme.
      * @return Uri A new Uri.
      */
+    #[Override]
     public function withScheme(string $scheme): static
     {
         $temp = clone $this;
@@ -507,6 +523,7 @@ class Uri implements Stringable, UriInterface
      * @param string $password The password.
      * @return Uri A new Uri.
      */
+    #[Override]
     public function withUserInfo(string $user, string|null $password = null): static
     {
         $temp = clone $this;
@@ -604,7 +621,7 @@ class Uri implements Stringable, UriInterface
 
     /**
      * Filter the host.
-     * 
+     *
      * @param string $host The host.
      * @return string The filtered host.
      *
